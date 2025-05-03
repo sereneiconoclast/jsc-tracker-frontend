@@ -8,11 +8,14 @@ const awsConfig = {
     oauth: {
       domain: 'auth.jsc-tracker.infinitequack.net',
       scope: ['openid', 'profile', 'email', 'phone'],
-      redirectSignIn: 'https://jsc-tracker.infinitequack.net',
-      redirectSignOut: 'https://jsc-tracker.infinitequack.net/logout',
+      redirectSignIn: 'http://localhost:3000',
+      redirectSignOut: 'http://localhost:3000',
       responseType: 'code'
     }
   }
 };
+
+// Add debug logging
+console.log('AWS Config:', awsConfig);
 
 export default awsConfig;
