@@ -1,10 +1,26 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import axios from 'axios';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function Home() {
+  const googleLogin = useGoogleLogin({
+    onSuccess: async ({ access_token }) => {
+      console.log(access_token);
+      const userInfo = await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        { headers: { Authorization: `Bearer ${access_token}` } },
+      );
+      console.log(userInfo);
+    },
+  });
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        <button onClick={() => googleLogin()}>Login</button>
         <Image
           className={styles.logo}
           src="/next.svg"
