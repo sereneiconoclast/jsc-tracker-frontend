@@ -2,7 +2,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import { GOOGLE_CLIENT_ID } from '@/config/auth';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GoogleOAuthProvider clientId="HISTORY-ERASER-BUTTON">
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           {children}
         </GoogleOAuthProvider>
       </body>

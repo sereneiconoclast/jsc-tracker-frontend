@@ -1,0 +1,1 @@
+export const GOOGLE_CLIENT_ID = 'HISTORY-ERASER-BUTTON';
