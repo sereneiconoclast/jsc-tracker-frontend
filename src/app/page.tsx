@@ -4,63 +4,49 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
+import { setAuthCookie, getAuthCookie } from '../utils/cookies';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [userData, setUserData] = useState<string>('(Please wait)');
+  const authCookie = getAuthCookie();
+
+  useEffect(() => {
+    if (authCookie) {
+      axios.get(`https://jsc-tracker.infinitequack.net/user/greg.meyers.1138@gmail.com?access_token=${authCookie.access_token}`)
+        .then(response => {
+          setUserData(JSON.stringify(response.data, null, 2));
+        })
+        .catch(error => {
+          setUserData(`Error: ${error.message}`);
+        });
+    }
+  }, [authCookie]);
+
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
-      console.log(access_token);
-      const userInfo = await axios.get(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
-        { headers: { Authorization: `Bearer ${access_token}` } },
-      );
-      console.log(userInfo);
+      setAuthCookie(access_token);
     },
   });
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <button onClick={() => googleLogin()}>Login</button>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        {!authCookie ? (
+          <>
+            <button onClick={() => googleLogin()}>Login</button>
             <Image
               className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/next.svg"
+              alt="Next.js logo"
+              width={180}
+              height={38}
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
+          </>
+        ) : (
+          <pre>{userData}</pre>
+        )}
       </main>
       <footer className={styles.footer}>
         <a
