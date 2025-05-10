@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -8,12 +8,17 @@ import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [auth, setAuth] = useState(null);
   const [userData, setUserData] = useState<string>('(Please wait)');
-  const authCookie = getAuthCookie();
 
   useEffect(() => {
-    if (authCookie) {
-      axios.get(`https://jsc-tracker.infinitequack.net/user/greg.meyers.1138@gmail.com?access_token=${authCookie.access_token}`)
+    const cookie = getAuthCookie();
+    setAuth(cookie);
+  }, []);
+
+  useEffect(() => {
+    if (auth?.access_token) {
+      axios.get(`https://jsc-tracker.infinitequack.net/user/greg.meyers.1138@gmail.com?access_token=${auth.access_token}`)
         .then(response => {
           setUserData(JSON.stringify(response.data, null, 2));
         })
@@ -21,18 +26,20 @@ export default function Home() {
           setUserData(`Error: ${error.message}`);
         });
     }
-  }, [authCookie]);
+  }, [auth]);
 
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
       setAuthCookie(access_token);
+      const cookie = getAuthCookie(); // immediately retrieve and update
+      setAuth(cookie);
     },
   });
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {!authCookie ? (
+        {!auth ? (
           <>
             <button onClick={() => googleLogin()}>Login</button>
             <Image
