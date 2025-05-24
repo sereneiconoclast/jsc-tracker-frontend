@@ -8,7 +8,7 @@ import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [auth, setAuth] = useState(null);
+  const [auth, setAuth] = useState<any>(null);
   const [userData, setUserData] = useState<string>('(Please wait)');
 
   useEffect(() => {
