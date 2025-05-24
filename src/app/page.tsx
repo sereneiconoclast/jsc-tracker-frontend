@@ -18,7 +18,7 @@ export default function Home() {
 
   useEffect(() => {
     if (auth?.access_token) {
-      axios.get(`https://jsc-tracker.infinitequack.net/user/greg.meyers.1138@gmail.com?access_token=${auth.access_token}`)
+      axios.get(`https://jsc-tracker.infinitequack.net/user/-?access_token=${auth.access_token}`)
         .then(response => {
           setUserData(JSON.stringify(response.data, null, 2));
         })
