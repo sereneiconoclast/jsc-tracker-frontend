@@ -191,9 +191,104 @@ a.secondary {
 }
 
 .userName {
-  font-size: 1.5rem;
-  font-weight: 600;
   margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editLink {
+  font-size: 0.9rem;
+  color: #666;
+  cursor: pointer;
+  user-select: none;
+}
+
+.editLink:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.editNameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nameInput {
+  font-size: 1.5rem;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.editButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.saveButton {
+  background-color: #0070f3;
+  color: white;
+  border-color: #0070f3;
+}
+
+.saveButton:hover:not(:disabled) {
+  background-color: #0051a2;
+}
+
+.saveButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background-color: white;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: #f5f5f5;
+}
+
+.cancelButton:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  background-color: #fff2f2;
+  border: 1px solid #ffcdd2;
+  color: #d32f2f;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorClose {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.errorClose:hover {
+  color: #b71c1c;
 }
 
 .userEmail {

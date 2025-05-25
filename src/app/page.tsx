@@ -12,6 +12,10 @@ export default function Home() {
   const [auth, setAuth] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [rawData, setRawData] = useState<string>('(Please wait)');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const cookie = getAuthCookie();
@@ -39,6 +43,34 @@ export default function Home() {
     },
   });
 
+  const handleEditClick = () => {
+    setEditedName(userData.name);
+    setIsEditingName(true);
+    setError(null);
+  };
+
+  const handleCancel = () => {
+    setIsEditingName(false);
+    setError(null);
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+    try {
+      await axios.post(
+        `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+        { name: editedName }
+      );
+      setUserData({ ...userData, name: editedName });
+      setIsEditingName(false);
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message || 'Failed to save changes');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -56,6 +88,17 @@ export default function Home() {
           </>
         ) : userData ? (
           <div className={styles.userProfile}>
+            {error && (
+              <div className={styles.error}>
+                Could not edit: {error}
+                <button
+                  className={styles.errorClose}
+                  onClick={() => setError(null)}
+                >
+                  ×
+                </button>
+              </div>
+            )}
             <div className={styles.userHeader}>
               {userData.picture_data ? (
                 <img
@@ -71,7 +114,39 @@ export default function Home() {
                 </div>
               )}
               <div className={styles.userInfo}>
-                <h1 className={styles.userName}>{userData.name}</h1>
+                {isEditingName ? (
+                  <div className={styles.editNameContainer}>
+                    <input
+                      type="text"
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className={styles.nameInput}
+                    />
+                    <div className={styles.editButtons}>
+                      <button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className={styles.saveButton}
+                      >
+                        {isSaving ? 'Saving...' : 'Save'}
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        disabled={isSaving}
+                        className={styles.cancelButton}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <h1 className={styles.userName}>
+                    {userData.name}
+                    <span className={styles.editLink} onClick={handleEditClick}>
+                      {' '}(edit)
+                    </span>
+                  </h1>
+                )}
                 <p className={styles.userEmail}>{userData.email}</p>
                 <div className={styles.userTimestamps}>
                   <p>Created {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
