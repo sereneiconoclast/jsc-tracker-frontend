@@ -79,11 +79,12 @@ export default function Home() {
             <button onClick={() => googleLogin()}>Login</button>
             <Image
               className={styles.logo}
-              src="/next.svg"
+              src="/JSC-Tracker/images/next.svg"
               alt="Next.js logo"
               width={180}
               height={38}
               priority
+              unoptimized
             />
           </>
         ) : userData ? (
@@ -168,7 +169,7 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/file.svg"
+            src="/JSC-Tracker/images/file.svg"
             alt="File icon"
             width={16}
             height={16}
@@ -182,7 +183,7 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/window.svg"
+            src="/JSC-Tracker/images/window.svg"
             alt="Window icon"
             width={16}
             height={16}
@@ -196,7 +197,7 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/globe.svg"
+            src="/JSC-Tracker/images/globe.svg"
             alt="Globe icon"
             width={16}
             height={16}
