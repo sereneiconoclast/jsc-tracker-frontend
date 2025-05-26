@@ -7,10 +7,11 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { AuthState, UserData, ApiError } from '../types/auth';
 
 export default function Home() {
-  const [auth, setAuth] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [auth, setAuth] = useState<AuthState | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [rawData, setRawData] = useState<string>('(Please wait)');
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -44,6 +45,7 @@ export default function Home() {
   });
 
   const handleEditClick = () => {
+    if (!userData) return;
     setEditedName(userData.name);
     setIsEditingName(true);
     setError(null);
@@ -55,6 +57,7 @@ export default function Home() {
   };
 
   const handleSave = async () => {
+    if (!userData || !auth) return;
     setIsSaving(true);
     setError(null);
     try {
@@ -64,8 +67,9 @@ export default function Home() {
       );
       setUserData({ ...userData, name: editedName });
       setIsEditingName(false);
-    } catch (err: any) {
-      setError(err.response?.data?.error || err.message || 'Failed to save changes');
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      setError(error.response?.data?.error || error.message || 'Failed to save changes');
     } finally {
       setIsSaving(false);
     }

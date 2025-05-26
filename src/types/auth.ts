@@ -1,0 +1,21 @@
+export interface AuthState {
+  access_token: string;
+}
+
+export interface UserData {
+  sub: string;
+  name: string;
+  email: string;
+  picture_data?: string;
+  created_at: number;
+  modified_at: number;
+}
+
+export interface ApiError {
+  response?: {
+    data?: {
+      error?: string;
+    };
+  };
+  message: string;
+}
