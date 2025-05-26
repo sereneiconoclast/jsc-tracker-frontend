@@ -2,6 +2,8 @@
   "name": "jsc-tracker-frontend",
   "version": "0.1.0",
   "private": true,
+  "//": "https://stackoverflow.com/a/49473246/27249623",
+  "homepage": ".",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

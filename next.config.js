@@ -1,33 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups'
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless'
-          },
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: 'http://localhost:3000'
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS'
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization'
-          }
-        ]
-      }
-    ]
+  output: 'export',  // Enable static exports
+  basePath: '/JSC-Tracker',  // Set the base path for all assets
+  assetPrefix: '/JSC-Tracker/',  // Set the prefix for all assets (note the trailing slash)
+  images: {
+    unoptimized: true,  // Required for static export
   }
 }
 
