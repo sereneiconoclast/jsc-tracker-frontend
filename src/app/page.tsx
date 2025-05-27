@@ -154,8 +154,8 @@ export default function Home() {
                 )}
                 <p className={styles.userEmail}>{userData.email}</p>
                 <div className={styles.userTimestamps}>
-                  <p>Created {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
-                  <p>Updated {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
+                  <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
+                  <p>Last seen {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
                 </div>
               </div>
             </div>
