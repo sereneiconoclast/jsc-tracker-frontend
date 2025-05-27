@@ -14,6 +14,20 @@
   padding: 80px;
   gap: 64px;
   font-family: var(--font-geist-sans);
+
+  /* Background image styles */
+  background-image: url('/JSC-Tracker/images/pixabay-office-building-glass-458053.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Ensure content stays above the overlay */
+.main, .footer {
+  position: relative;
+  z-index: 1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -171,6 +185,9 @@ a.secondary {
   width: 100%;
   max-width: 800px;
   padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
 }
 
 .userHeader {
