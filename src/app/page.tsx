@@ -104,20 +104,28 @@ export default function Home() {
     return (
       <div>
         {isEditing ? (
-          <>
+          <div className={styles.editContainer}>
             <input
               value={editedValue}
               onChange={(e) => setEditedValue(e.target.value)}
+              className={styles.editInput}
             />
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className={styles.saveButton}
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-            <button onClick={handleCancel}>Cancel</button>
-          </>
+            <div className={styles.editButtons}>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className={styles.saveButton}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={handleCancel}
+                className={styles.cancelButton}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         ) : (
           <span>{value} <span onClick={handleEditClick}>(edit)</span></span>
         )}

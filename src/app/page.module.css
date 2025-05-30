@@ -227,18 +227,18 @@ a.secondary {
   text-decoration: underline;
 }
 
-.editNameContainer {
+.editContainer {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.nameInput {
+.editInput {
+  width: 100%;
   font-size: 1.5rem;
   padding: 0.25rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%;
 }
 
 .editButtons {
