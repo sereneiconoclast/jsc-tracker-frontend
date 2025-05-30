@@ -345,3 +345,9 @@ a.secondary {
   font-weight: 600;
   color: #666;
 }
+
+.editingTip {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}

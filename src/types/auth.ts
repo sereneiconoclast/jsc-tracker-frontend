@@ -9,6 +9,7 @@ export interface UserData {
   picture_data?: string;
   created_at: number;
   modified_at: number;
+  slack_profile: string;
 }
 
 export interface ApiError {

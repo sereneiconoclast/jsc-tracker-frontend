@@ -48,6 +48,8 @@ export default function Home() {
     onSaveError: (error: ApiError) => void;
     onCancel?: () => void;
     onEditClick?: () => void;
+    isLink?: boolean;
+    editingTip?: string;
   }
 
   const onSaveDisplayError = (error: ApiError) => {
@@ -72,7 +74,16 @@ export default function Home() {
     setUserData({ ...userData, email: newEmail });
   };
 
-  const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick }: EditableTextProps) => {
+  const onSaveSlackProfileStart = async (newProfile: string) => {
+    if (!userData || !auth) return;
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { slack_profile: newProfile }
+    );
+    setUserData({ ...userData, slack_profile: newProfile });
+  };
+
+  const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, isLink = false, editingTip }: EditableTextProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [editedValue, setEditedValue] = useState(value);
@@ -105,6 +116,7 @@ export default function Home() {
       <div>
         {isEditing ? (
           <div className={styles.editContainer}>
+            {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
             <input
               value={editedValue}
               onChange={(e) => setEditedValue(e.target.value)}
@@ -127,7 +139,14 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <span>{value} <span onClick={handleEditClick}>(edit)</span></span>
+          <span>
+            {isLink ? (
+              <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+            ) : (
+              value
+            )}{' '}
+            <span onClick={handleEditClick}>(edit)</span>
+          </span>
         )}
       </div>
     );
@@ -186,6 +205,13 @@ export default function Home() {
                   value={userData.email}
                   onSaveStart={onSaveUserEmailStart}
                   onSaveError={onSaveDisplayError}
+                />
+                <EditableText
+                  value={userData.slack_profile}
+                  editingTip={"Open your Slack profile, click three dots, then \"Copy link to profile\""}
+                  onSaveStart={onSaveSlackProfileStart}
+                  onSaveError={onSaveDisplayError}
+                  isLink={true}
                 />
                 <div className={styles.userTimestamps}>
                   <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
