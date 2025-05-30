@@ -63,6 +63,15 @@ export default function Home() {
     setUserData({ ...userData, name: newName });
   };
 
+  const onSaveUserEmailStart = async (newEmail: string) => {
+    if (!userData || !auth) return;
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { email: newEmail }
+    );
+    setUserData({ ...userData, email: newEmail });
+  };
+
   const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick }: EditableTextProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -165,7 +174,11 @@ export default function Home() {
                   onSaveStart={onSaveUserNameStart}
                   onSaveError={onSaveDisplayError}
                 />
-                <p className={styles.userEmail}>{userData.email}</p>
+                <EditableText
+                  value={userData.email}
+                  onSaveStart={onSaveUserEmailStart}
+                  onSaveError={onSaveDisplayError}
+                />
                 <div className={styles.userTimestamps}>
                   <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
                   <p>Last seen {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
