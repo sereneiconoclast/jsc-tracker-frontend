@@ -13,9 +13,6 @@ export default function Home() {
   const [auth, setAuth] = useState<AuthState | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [rawData, setRawData] = useState<string>('(Please wait)');
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editedName, setEditedName] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,35 +41,79 @@ export default function Home() {
     },
   });
 
-  const handleEditClick = () => {
-    if (!userData) return;
-    setEditedName(userData.name);
-    setIsEditingName(true);
-    setError(null);
+  interface EditableTextProps {
+    value: string;
+    onSaveStart: (value: string) => Promise<void>;
+    onSaveSuccess?: () => void;
+    onSaveError: (error: ApiError) => void;
+    onCancel?: () => void;
+    onEditClick?: () => void;
+  }
+
+  const onSaveDisplayError = (error: ApiError) => {
+    setError(error.response?.data?.error || error.message || 'Failed to save changes');
   };
 
-  const handleCancel = () => {
-    setIsEditingName(false);
-    setError(null);
-  };
-
-  const handleSave = async () => {
+  const onSaveUserNameStart = async (newName: string) => {
     if (!userData || !auth) return;
-    setIsSaving(true);
-    setError(null);
-    try {
-      await axios.post(
-        `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-        { name: editedName }
-      );
-      setUserData({ ...userData, name: editedName });
-      setIsEditingName(false);
-    } catch (err: unknown) {
-      const error = err as ApiError;
-      setError(error.response?.data?.error || error.message || 'Failed to save changes');
-    } finally {
-      setIsSaving(false);
-    }
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { name: newName }
+    );
+    setUserData({ ...userData, name: newName });
+  };
+
+  const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick }: EditableTextProps) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [editedValue, setEditedValue] = useState(value);
+
+    const handleSave = async () => {
+      setIsSaving(true);
+      try {
+        await onSaveStart(editedValue);
+        onSaveSuccess?.();
+        setIsEditing(false);
+      } catch (err) {
+        const error = err as ApiError;
+        onSaveError(error);
+      } finally {
+        setIsSaving(false);
+      }
+    };
+
+    const handleCancel = () => {
+      onCancel?.();
+      setIsEditing(false);
+    };
+
+    const handleEditClick = () => {
+      onEditClick?.();
+      setIsEditing(true);
+    };
+
+    return (
+      <div>
+        {isEditing ? (
+          <>
+            <input
+              value={editedValue}
+              onChange={(e) => setEditedValue(e.target.value)}
+            />
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className={styles.saveButton}
+            >
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
+            <button onClick={handleCancel}>Cancel</button>
+          </>
+        ) : (
+          <span>{value} <span onClick={handleEditClick}>(edit)</span></span>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -119,39 +160,11 @@ export default function Home() {
                 </div>
               )}
               <div className={styles.userInfo}>
-                {isEditingName ? (
-                  <div className={styles.editNameContainer}>
-                    <input
-                      type="text"
-                      value={editedName}
-                      onChange={(e) => setEditedName(e.target.value)}
-                      className={styles.nameInput}
-                    />
-                    <div className={styles.editButtons}>
-                      <button
-                        onClick={handleSave}
-                        disabled={isSaving}
-                        className={styles.saveButton}
-                      >
-                        {isSaving ? 'Saving...' : 'Save'}
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        disabled={isSaving}
-                        className={styles.cancelButton}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <h1 className={styles.userName}>
-                    {userData.name}
-                    <span className={styles.editLink} onClick={handleEditClick}>
-                      {' '}(edit)
-                    </span>
-                  </h1>
-                )}
+                <EditableText
+                  value={userData.name}
+                  onSaveStart={onSaveUserNameStart}
+                  onSaveError={onSaveDisplayError}
+                />
                 <p className={styles.userEmail}>{userData.email}</p>
                 <div className={styles.userTimestamps}>
                   <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
