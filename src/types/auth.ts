@@ -10,6 +10,7 @@ export interface UserData {
   created_at: number;
   modified_at: number;
   slack_profile: string;
+  twopager: string;
 }
 
 export interface ApiError {

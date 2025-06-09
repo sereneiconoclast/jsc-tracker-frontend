@@ -83,6 +83,15 @@ export default function Home() {
     setUserData({ ...userData, slack_profile: newProfile });
   };
 
+  const onSaveTwoPagerStart = async (newTwoPager: string) => {
+    if (!userData || !auth) return;
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { twopager: newTwoPager }
+    );
+    setUserData({ ...userData, twopager: newTwoPager });
+  };
+
   const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, isLink = false, editingTip }: EditableTextProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -113,16 +122,16 @@ export default function Home() {
     };
 
     return (
-      <div>
+      <span>
         {isEditing ? (
-          <div className={styles.editContainer}>
+          <span className={styles.editContainer}>
             {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
             <input
               value={editedValue}
               onChange={(e) => setEditedValue(e.target.value)}
               className={styles.editInput}
             />
-            <div className={styles.editButtons}>
+            <span className={styles.editButtons}>
               <button
                 onClick={handleSave}
                 disabled={isSaving}
@@ -136,8 +145,8 @@ export default function Home() {
               >
                 Cancel
               </button>
-            </div>
-          </div>
+            </span>
+          </span>
         ) : (
           <span>
             {isLink ? (
@@ -145,10 +154,10 @@ export default function Home() {
             ) : (
               value
             )}{' '}
-            <span onClick={handleEditClick}>(edit)</span>
+            <span onClick={handleEditClick} className="editLink">(edit)</span>
           </span>
         )}
-      </div>
+      </span>
     );
   };
 
@@ -206,17 +215,26 @@ export default function Home() {
                   onSaveStart={onSaveUserEmailStart}
                   onSaveError={onSaveDisplayError}
                 />
+                <p>Slack profile URL:{' '}
                 <EditableText
                   value={userData.slack_profile}
                   editingTip={"Open your Slack profile, click three dots, then \"Copy link to profile\""}
                   onSaveStart={onSaveSlackProfileStart}
                   onSaveError={onSaveDisplayError}
                   isLink={true}
-                />
+                /></p>
                 <div className={styles.userTimestamps}>
                   <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
                   <p>Last seen {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
                 </div>
+                <p>Two-pager URL:{' '}
+                <EditableText
+                  value={userData.twopager}
+                  editingTip={"Link to two-pager document"}
+                  onSaveStart={onSaveTwoPagerStart}
+                  onSaveError={onSaveDisplayError}
+                  isLink={true}
+                /></p>
               </div>
             </div>
             <pre className={styles.rawData}>{rawData}</pre>
