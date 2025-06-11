@@ -11,6 +11,7 @@ export interface UserData {
   modified_at: number;
   slack_profile: string;
   twopager: string;
+  cmf: string;
 }
 
 export interface ApiError {
