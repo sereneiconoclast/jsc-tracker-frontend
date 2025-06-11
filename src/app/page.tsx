@@ -154,7 +154,7 @@ export default function Home() {
             ) : (
               value
             )}{' '}
-            <span onClick={handleEditClick} className="editLink">(edit)</span>
+            <span onClick={handleEditClick} className={styles.editLink}>(edit)</span>
           </span>
         )}
       </span>
