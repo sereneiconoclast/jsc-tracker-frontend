@@ -351,3 +351,58 @@ a.secondary {
   font-size: 0.9rem;
   margin: 0 0 0.5rem 0;
 }
+
+.markdownContainer {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.markdownEditInput {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.5rem;
+  font-family: var(--font-geist-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.markdownDisplay {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.markdownDisplay p {
+  margin: 0.5rem 0;
+}
+
+.markdownDisplay strong {
+  font-weight: 600;
+}
+
+.markdownDisplay em {
+  font-style: italic;
+}
+
+.markdownDisplay code {
+  font-family: var(--font-geist-mono);
+  background: var(--gray-alpha-100);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.cmfSection {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-alpha-200);
+}
+
+.cmfSection h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: var(--foreground);
+}
