@@ -8,6 +8,7 @@ import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { AuthState, UserData, ApiError } from '../types/auth';
+import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
   const [auth, setAuth] = useState<AuthState | null>(null);
@@ -92,6 +93,15 @@ export default function Home() {
     setUserData({ ...userData, twopager: newTwoPager });
   };
 
+  const onSaveCMFStart = async (newCMF: string) => {
+    if (!userData || !auth) return;
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { cmf: newCMF }
+    );
+    setUserData({ ...userData, cmf: newCMF });
+  };
+
   const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, isLink = false, editingTip }: EditableTextProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -158,6 +168,82 @@ export default function Home() {
           </span>
         )}
       </span>
+    );
+  };
+
+  interface MarkdownEditableTextProps {
+    value: string;
+    onSaveStart: (value: string) => Promise<void>;
+    onSaveSuccess?: () => void;
+    onSaveError: (error: ApiError) => void;
+    onCancel?: () => void;
+    onEditClick?: () => void;
+    editingTip?: string;
+  }
+
+  const MarkdownEditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, editingTip }: MarkdownEditableTextProps) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [editedValue, setEditedValue] = useState(value);
+
+    const handleSave = async () => {
+      setIsSaving(true);
+      try {
+        await onSaveStart(editedValue);
+        onSaveSuccess?.();
+        setIsEditing(false);
+      } catch (err) {
+        const error = err as ApiError;
+        onSaveError(error);
+      } finally {
+        setIsSaving(false);
+      }
+    };
+
+    const handleCancel = () => {
+      onCancel?.();
+      setIsEditing(false);
+    };
+
+    const handleEditClick = () => {
+      onEditClick?.();
+      setIsEditing(true);
+    };
+
+    return (
+      <div className={styles.markdownContainer}>
+        {isEditing ? (
+          <div className={styles.editContainer}>
+            {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
+            <textarea
+              value={editedValue}
+              onChange={(e) => setEditedValue(e.target.value)}
+              className={styles.markdownEditInput}
+              rows={6}
+            />
+            <span className={styles.editButtons}>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className={styles.saveButton}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={handleCancel}
+                className={styles.cancelButton}
+              >
+                Cancel
+              </button>
+            </span>
+          </div>
+        ) : (
+          <div className={styles.markdownDisplay}>
+            <ReactMarkdown>{value}</ReactMarkdown>
+            <span onClick={handleEditClick} className={styles.editLink}>(edit)</span>
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -235,6 +321,15 @@ export default function Home() {
                   onSaveError={onSaveDisplayError}
                   isLink={true}
                 /></p>
+                <div className={styles.cmfSection}>
+                  <h3>Candidate Market Fit</h3>
+                  <MarkdownEditableText
+                    value={userData.cmf}
+                    editingTip={"Describe your candidate market fit. You can use Markdown formatting like **bold** and _italic_ text, bulleted or numbered lists, or [links](https://...)."}
+                    onSaveStart={onSaveCMFStart}
+                    onSaveError={onSaveDisplayError}
+                  />
+                </div>
               </div>
             </div>
             <pre className={styles.rawData}>{rawData}</pre>
