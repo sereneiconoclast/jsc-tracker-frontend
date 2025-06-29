@@ -8,7 +8,8 @@ import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { AuthState, UserData, ApiError } from '../types/auth';
-import ReactMarkdown from 'react-markdown';
+import { EditableText } from '../components/EditableText';
+import { MarkdownEditableText } from '../components/MarkdownEditableText';
 
 export default function Home() {
   const [auth, setAuth] = useState<AuthState | null>(null);
@@ -41,17 +42,6 @@ export default function Home() {
       setAuth(cookie);
     },
   });
-
-  interface EditableTextProps {
-    value: string;
-    onSaveStart: (value: string) => Promise<void>;
-    onSaveSuccess?: () => void;
-    onSaveError: (error: ApiError) => void;
-    onCancel?: () => void;
-    onEditClick?: () => void;
-    isLink?: boolean;
-    editingTip?: string;
-  }
 
   const onSaveDisplayError = (error: ApiError) => {
     setError(error.response?.data?.error || error.message || 'Failed to save changes');
@@ -100,151 +90,6 @@ export default function Home() {
       { cmf: newCMF }
     );
     setUserData({ ...userData, cmf: newCMF });
-  };
-
-  const EditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, isLink = false, editingTip }: EditableTextProps) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [editedValue, setEditedValue] = useState(value);
-
-    const handleSave = async () => {
-      setIsSaving(true);
-      try {
-        await onSaveStart(editedValue);
-        onSaveSuccess?.();
-        setIsEditing(false);
-      } catch (err) {
-        const error = err as ApiError;
-        onSaveError(error);
-      } finally {
-        setIsSaving(false);
-      }
-    };
-
-    const handleCancel = () => {
-      onCancel?.();
-      setIsEditing(false);
-    };
-
-    const handleEditClick = () => {
-      onEditClick?.();
-      setIsEditing(true);
-    };
-
-    return (
-      <span>
-        {isEditing ? (
-          <span className={styles.editContainer}>
-            {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
-            <input
-              value={editedValue}
-              onChange={(e) => setEditedValue(e.target.value)}
-              className={styles.editInput}
-            />
-            <span className={styles.editButtons}>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className={styles.saveButton}
-              >
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={handleCancel}
-                className={styles.cancelButton}
-              >
-                Cancel
-              </button>
-            </span>
-          </span>
-        ) : (
-          <span>
-            {isLink ? (
-              <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
-            ) : (
-              value
-            )}{' '}
-            <span onClick={handleEditClick} className={styles.editLink}>(edit)</span>
-          </span>
-        )}
-      </span>
-    );
-  };
-
-  interface MarkdownEditableTextProps {
-    value: string;
-    onSaveStart: (value: string) => Promise<void>;
-    onSaveSuccess?: () => void;
-    onSaveError: (error: ApiError) => void;
-    onCancel?: () => void;
-    onEditClick?: () => void;
-    editingTip?: string;
-  }
-
-  const MarkdownEditableText = ({ value, onSaveStart, onSaveSuccess, onSaveError, onCancel, onEditClick, editingTip }: MarkdownEditableTextProps) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [editedValue, setEditedValue] = useState(value);
-
-    const handleSave = async () => {
-      setIsSaving(true);
-      try {
-        await onSaveStart(editedValue);
-        onSaveSuccess?.();
-        setIsEditing(false);
-      } catch (err) {
-        const error = err as ApiError;
-        onSaveError(error);
-      } finally {
-        setIsSaving(false);
-      }
-    };
-
-    const handleCancel = () => {
-      onCancel?.();
-      setIsEditing(false);
-    };
-
-    const handleEditClick = () => {
-      onEditClick?.();
-      setIsEditing(true);
-    };
-
-    return (
-      <div className={styles.markdownContainer}>
-        {isEditing ? (
-          <div className={styles.editContainer}>
-            {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
-            <textarea
-              value={editedValue}
-              onChange={(e) => setEditedValue(e.target.value)}
-              className={styles.markdownEditInput}
-              rows={6}
-            />
-            <span className={styles.editButtons}>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className={styles.saveButton}
-              >
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={handleCancel}
-                className={styles.cancelButton}
-              >
-                Cancel
-              </button>
-            </span>
-          </div>
-        ) : (
-          <div className={styles.markdownDisplay}>
-            <ReactMarkdown>{value}</ReactMarkdown>
-            <span onClick={handleEditClick} className={styles.editLink}>(edit)</span>
-          </div>
-        )}
-      </div>
-    );
   };
 
   return (
