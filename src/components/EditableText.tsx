@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { ApiError } from '../types/auth';
+import { BaseEditable } from './BaseEditable';
 import styles from '../app/page.module.css';
 
 interface EditableTextProps {
@@ -25,70 +25,36 @@ export const EditableText = ({
   isLink = false,
   editingTip
 }: EditableTextProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [editedValue, setEditedValue] = useState(value);
+  const renderInput = (inputValue: string, onChange: (value: string) => void) => (
+    <input
+      value={inputValue}
+      onChange={(e) => onChange(e.target.value)}
+      className={styles.editInput}
+    />
+  );
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      await onSaveStart(editedValue);
-      onSaveSuccess?.();
-      setIsEditing(false);
-    } catch (err) {
-      const error = err as ApiError;
-      onSaveError(error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleCancel = () => {
-    onCancel?.();
-    setIsEditing(false);
-  };
-
-  const handleEditClick = () => {
-    onEditClick?.();
-    setIsEditing(true);
-  };
+  const renderDisplay = (displayValue: string, onEditClick: () => void) => (
+    <span>
+      {isLink ? (
+        <a href={displayValue} target="_blank" rel="noopener noreferrer">{displayValue}</a>
+      ) : (
+        displayValue
+      )}{' '}
+      <span onClick={onEditClick} className={styles.editLink}>(edit)</span>
+    </span>
+  );
 
   return (
-    <span>
-      {isEditing ? (
-        <span className={styles.editContainer}>
-          {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
-          <input
-            value={editedValue}
-            onChange={(e) => setEditedValue(e.target.value)}
-            className={styles.editInput}
-          />
-          <span className={styles.editButtons}>
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className={styles.saveButton}
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              onClick={handleCancel}
-              className={styles.cancelButton}
-            >
-              Cancel
-            </button>
-          </span>
-        </span>
-      ) : (
-        <span>
-          {isLink ? (
-            <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
-          ) : (
-            value
-          )}{' '}
-          <span onClick={handleEditClick} className={styles.editLink}>(edit)</span>
-        </span>
-      )}
-    </span>
+    <BaseEditable
+      value={value}
+      onSaveStart={onSaveStart}
+      onSaveSuccess={onSaveSuccess}
+      onSaveError={onSaveError}
+      onCancel={onCancel}
+      onEditClick={onEditClick}
+      editingTip={editingTip}
+      renderInput={renderInput}
+      renderDisplay={renderDisplay}
+    />
   );
 };
