@@ -12,6 +12,7 @@ export interface UserData {
   slack_profile: string;
   twopager: string;
   cmf: string;
+  contact_info: string;
 }
 
 export interface ApiError {

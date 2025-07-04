@@ -92,6 +92,15 @@ export default function Home() {
     setUserData({ ...userData, cmf: newCMF });
   };
 
+  const onSaveContactInfoStart = async (newContactInfo: string) => {
+    if (!userData || !auth) return;
+    await axios.post(
+      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
+      { contact_info: newContactInfo }
+    );
+    setUserData({ ...userData, contact_info: newContactInfo });
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -172,6 +181,15 @@ export default function Home() {
                     value={userData.cmf}
                     editingTip={"Describe your candidate market fit. You can use Markdown formatting like **bold** and _italic_ text, bulleted or numbered lists, or [links](https://...)."}
                     onSaveStart={onSaveCMFStart}
+                    onSaveError={onSaveDisplayError}
+                  />
+                </div>
+                <div className={styles.contactInfoSection}>
+                  <h3>Contact Information</h3>
+                  <MarkdownEditableText
+                    value={userData.contact_info}
+                    editingTip={"Add your contact information. You can use Markdown formatting like **bold** text, bulleted lists, or [links](https://...)."}
+                    onSaveStart={onSaveContactInfoStart}
                     onSaveError={onSaveDisplayError}
                   />
                 </div>
