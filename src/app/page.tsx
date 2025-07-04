@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-import axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
 import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
@@ -10,6 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { AuthState, UserData, ApiError } from '../types/auth';
 import { EditableText } from '../components/EditableText';
 import { MarkdownEditableText } from '../components/MarkdownEditableText';
+import { userApiService } from '../services/userApi';
 
 export default function Home() {
   const [auth, setAuth] = useState<AuthState | null>(null);
@@ -24,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     if (auth?.access_token) {
-      axios.get(`https://jsc-tracker.infinitequack.net/user/-?access_token=${auth.access_token}`)
+      userApiService.getUserData(auth.access_token)
         .then(response => {
           setUserData(response.data.users[0]);
           setRawData(JSON.stringify(response.data, null, 2));
@@ -49,55 +49,37 @@ export default function Home() {
 
   const onSaveUserNameStart = async (newName: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { name: newName }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'name', newName);
     setUserData({ ...userData, name: newName });
   };
 
   const onSaveUserEmailStart = async (newEmail: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { email: newEmail }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'email', newEmail);
     setUserData({ ...userData, email: newEmail });
   };
 
   const onSaveSlackProfileStart = async (newProfile: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { slack_profile: newProfile }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'slack_profile', newProfile);
     setUserData({ ...userData, slack_profile: newProfile });
   };
 
   const onSaveTwoPagerStart = async (newTwoPager: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { twopager: newTwoPager }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'twopager', newTwoPager);
     setUserData({ ...userData, twopager: newTwoPager });
   };
 
   const onSaveCMFStart = async (newCMF: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { cmf: newCMF }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'cmf', newCMF);
     setUserData({ ...userData, cmf: newCMF });
   };
 
   const onSaveContactInfoStart = async (newContactInfo: string) => {
     if (!userData || !auth) return;
-    await axios.post(
-      `https://jsc-tracker.infinitequack.net/user/${userData.sub}?access_token=${auth.access_token}`,
-      { contact_info: newContactInfo }
-    );
+    await userApiService.updateUserField(userData.sub, auth.access_token, 'contact_info', newContactInfo);
     setUserData({ ...userData, contact_info: newContactInfo });
   };
 
