@@ -137,26 +137,26 @@ export default function Home() {
                   onSaveStart={onSaveUserEmailStart}
                   onSaveError={onSaveDisplayError}
                 />
-                <p>Slack profile URL:{' '}
+                <div>Slack profile URL:{' '}
                 <EditableText
                   value={userData.slack_profile}
                   editingTip={"Open your Slack profile, click three dots, then \"Copy link to profile\""}
                   onSaveStart={onSaveSlackProfileStart}
                   onSaveError={onSaveDisplayError}
                   isLink={true}
-                /></p>
+                /></div>
                 <div className={styles.userTimestamps}>
                   <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
                   <p>Last seen {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
                 </div>
-                <p>Two-pager URL:{' '}
+                <div>Two-pager URL:{' '}
                 <EditableText
                   value={userData.twopager}
                   editingTip={"Link to two-pager document"}
                   onSaveStart={onSaveTwoPagerStart}
                   onSaveError={onSaveDisplayError}
                   isLink={true}
-                /></p>
+                /></div>
                 <div className={styles.cmfSection}>
                   <h3>Candidate Market Fit</h3>
                   <MarkdownEditableText
