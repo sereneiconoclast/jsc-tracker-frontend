@@ -1,14 +1,15 @@
 'use client';
 
-import Image from "next/image";
 import styles from "./page.module.css";
-import { useGoogleLogin } from '@react-oauth/google';
 import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { AuthState, UserRecord, ApiError } from '../types/auth';
 import { EditableText } from '../components/EditableText';
 import { MarkdownEditableText } from '../components/MarkdownEditableText';
+import { LoginSection } from '../components/LoginSection';
+import { ErrorDisplay } from '../components/ErrorDisplay';
+import { Footer } from '../components/Footer';
 import { userApiService } from '../services/userApi';
 
 export default function Home() {
@@ -25,23 +26,15 @@ export default function Home() {
   useEffect(() => {
     if (auth?.access_token) {
       userApiService.getUser(auth.access_token)
-        .then(response => {
+        .then((response: any) => {
           setUserRecord(response.data.users[0]);
           setRawData(JSON.stringify(response.data, null, 2));
         })
-        .catch(error => {
+        .catch((error: any) => {
           setRawData(`Error: ${error.message}`);
         });
     }
   }, [auth]);
-
-  const googleLogin = useGoogleLogin({
-    onSuccess: async ({ access_token }) => {
-      setAuthCookie(access_token);
-      const cookie = getAuthCookie(); // immediately retrieve and update
-      setAuth(cookie);
-    },
-  });
 
   const onSaveDisplayError = (error: ApiError) => {
     setError(error.response?.data?.error || error.message || 'Failed to save changes');
@@ -87,31 +80,10 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         {!auth ? (
-          <>
-            <button onClick={() => googleLogin()}>Login</button>
-            <Image
-              className={styles.logo}
-              src="/JSC-Tracker/images/next.svg"
-              alt="Next.js logo"
-              width={180}
-              height={38}
-              priority
-              unoptimized
-            />
-          </>
+          <LoginSection onAuthChange={setAuth} />
         ) : userRecord ? (
           <div className={styles.userProfile}>
-            {error && (
-              <div className={styles.error}>
-                Could not edit: {error}
-                <button
-                  className={styles.errorClose}
-                  onClick={() => setError(null)}
-                >
-                  ×
-                </button>
-              </div>
-            )}
+            <ErrorDisplay error={error} onDismiss={() => setError(null)} />
             <div className={styles.userHeader}>
               {userRecord.picture_data ? (
                 <img
@@ -183,50 +155,7 @@ export default function Home() {
           <p>Loading...</p>
         )}
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/JSC-Tracker/images/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/JSC-Tracker/images/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/JSC-Tracker/images/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <Footer />
     </div>
   );
 }

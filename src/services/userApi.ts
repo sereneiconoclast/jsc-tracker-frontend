@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { UserRecord } from '../types/auth';
 
 export class UserApiService {
   private baseUrl = 'https://jsc-tracker.infinitequack.net';
