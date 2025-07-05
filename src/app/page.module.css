@@ -48,6 +48,14 @@
   grid-row-start: 2;
 }
 
+.contentContainer {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .main ol {
   font-family: var(--font-geist-mono);
   padding-left: 0;

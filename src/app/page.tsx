@@ -80,7 +80,7 @@ export default function Home() {
         {!auth ? (
           <LoginSection onAuthChange={setAuth} />
         ) : userRecord ? (
-          <>
+          <div className={styles.contentContainer}>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
             <UserProfile
               userRecord={userRecord}
@@ -93,7 +93,7 @@ export default function Home() {
               onSaveDisplayError={onSaveDisplayError}
             />
             <pre className={styles.rawData}>{rawData}</pre>
-          </>
+          </div>
         ) : (
           <p>Loading...</p>
         )}
