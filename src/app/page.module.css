@@ -403,6 +403,15 @@ a.secondary {
   font-size: 0.9em;
 }
 
+.markdownDisplay a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.markdownDisplay a:hover {
+  text-decoration: underline;
+}
+
 .cmfSection {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -425,4 +434,13 @@ a.secondary {
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
   color: var(--foreground);
+}
+
+.userInfo a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.userInfo a:hover {
+  text-decoration: underline;
 }

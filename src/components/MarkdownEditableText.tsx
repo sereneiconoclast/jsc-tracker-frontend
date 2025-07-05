@@ -27,7 +27,15 @@ export const MarkdownEditableText = (p: MarkdownEditableTextProps) => {
 
   const renderDisplay = (displayValue: string, onEditClick: () => void) => (
     <div className={styles.markdownDisplay}>
-      <ReactMarkdown>{displayValue}</ReactMarkdown>
+      <ReactMarkdown
+        components={{
+          a: ({ node, ...props }) => (
+            <a {...props} target="_blank" rel="noopener noreferrer" />
+          ),
+        }}
+      >
+        {displayValue}
+      </ReactMarkdown>
       <span onClick={onEditClick} className={styles.editLink}>(edit)</span>
     </div>
   );
