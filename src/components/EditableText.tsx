@@ -15,16 +15,7 @@ interface EditableTextProps {
   editingTip?: string;
 }
 
-export const EditableText = ({
-  value,
-  onSaveStart,
-  onSaveSuccess,
-  onSaveError,
-  onCancel,
-  onEditClick,
-  isLink = false,
-  editingTip
-}: EditableTextProps) => {
+export const EditableText = (p: EditableTextProps) => {
   const renderInput = (inputValue: string, onChange: (value: string) => void) => (
     <input
       value={inputValue}
@@ -35,7 +26,7 @@ export const EditableText = ({
 
   const renderDisplay = (displayValue: string, onEditClick: () => void) => (
     <span>
-      {isLink ? (
+      {p.isLink ? (
         <a href={displayValue} target="_blank" rel="noopener noreferrer">{displayValue}</a>
       ) : (
         displayValue
@@ -46,13 +37,13 @@ export const EditableText = ({
 
   return (
     <BaseEditable
-      value={value}
-      onSaveStart={onSaveStart}
-      onSaveSuccess={onSaveSuccess}
-      onSaveError={onSaveError}
-      onCancel={onCancel}
-      onEditClick={onEditClick}
-      editingTip={editingTip}
+      value={p.value}
+      onSaveStart={p.onSaveStart}
+      onSaveSuccess={p.onSaveSuccess}
+      onSaveError={p.onSaveError}
+      onCancel={p.onCancel}
+      onEditClick={p.onEditClick}
+      editingTip={p.editingTip}
       renderInput={renderInput}
       renderDisplay={renderDisplay}
     />

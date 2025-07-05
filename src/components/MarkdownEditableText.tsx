@@ -15,15 +15,7 @@ interface MarkdownEditableTextProps {
   editingTip?: string;
 }
 
-export const MarkdownEditableText = ({
-  value,
-  onSaveStart,
-  onSaveSuccess,
-  onSaveError,
-  onCancel,
-  onEditClick,
-  editingTip
-}: MarkdownEditableTextProps) => {
+export const MarkdownEditableText = (p: MarkdownEditableTextProps) => {
   const renderInput = (inputValue: string, onChange: (value: string) => void) => (
     <textarea
       value={inputValue}
@@ -42,13 +34,13 @@ export const MarkdownEditableText = ({
 
   return (
     <BaseEditable
-      value={value}
-      onSaveStart={onSaveStart}
-      onSaveSuccess={onSaveSuccess}
-      onSaveError={onSaveError}
-      onCancel={onCancel}
-      onEditClick={onEditClick}
-      editingTip={editingTip}
+      value={p.value}
+      onSaveStart={p.onSaveStart}
+      onSaveSuccess={p.onSaveSuccess}
+      onSaveError={p.onSaveError}
+      onCancel={p.onCancel}
+      onEditClick={p.onEditClick}
+      editingTip={p.editingTip}
       renderInput={renderInput}
       renderDisplay={renderDisplay}
       containerClassName={styles.markdownContainer}
