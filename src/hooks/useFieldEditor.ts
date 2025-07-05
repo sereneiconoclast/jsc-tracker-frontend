@@ -10,6 +10,16 @@ interface UseFieldEditorProps {
   onEditClick?: () => void;
 }
 
+interface FieldEditorState {
+  isEditing: boolean;
+  isSaving: boolean;
+  editedValue: string;
+  handleSave: () => Promise<void>;
+  handleCancel: () => void;
+  handleEditClick: () => void;
+  handleInputChange: (newValue: string) => void;
+}
+
 export const useFieldEditor = ({
   value,
   onSaveStart,
@@ -17,7 +27,7 @@ export const useFieldEditor = ({
   onSaveError,
   onCancel,
   onEditClick
-}: UseFieldEditorProps) => {
+}: UseFieldEditorProps): FieldEditorState => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editedValue, setEditedValue] = useState(value);

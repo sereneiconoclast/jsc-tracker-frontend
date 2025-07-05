@@ -19,15 +19,7 @@ interface BaseEditableProps {
 }
 
 export const BaseEditable = (p: BaseEditableProps) => {
-  const {
-    isEditing,
-    isSaving,
-    editedValue,
-    handleSave,
-    handleCancel,
-    handleEditClick,
-    handleInputChange
-  } = useFieldEditor({
+  const fieldEditor = useFieldEditor({
     value: p.value,
     onSaveStart: p.onSaveStart,
     onSaveSuccess: p.onSaveSuccess,
@@ -38,20 +30,20 @@ export const BaseEditable = (p: BaseEditableProps) => {
 
   return (
     <div className={p.containerClassName}>
-      {isEditing ? (
+      {fieldEditor.isEditing ? (
         <div className={styles.editContainer}>
           {p.editingTip && <p className={styles.editingTip}>{p.editingTip}</p>}
-          {p.renderInput(editedValue, handleInputChange)}
+          {p.renderInput(fieldEditor.editedValue, fieldEditor.handleInputChange)}
           <span className={styles.editButtons}>
             <button
-              onClick={handleSave}
-              disabled={isSaving}
+              onClick={fieldEditor.handleSave}
+              disabled={fieldEditor.isSaving}
               className={styles.saveButton}
             >
-              {isSaving ? 'Saving...' : 'Save'}
+              {fieldEditor.isSaving ? 'Saving...' : 'Save'}
             </button>
             <button
-              onClick={handleCancel}
+              onClick={fieldEditor.handleCancel}
               className={styles.cancelButton}
             >
               Cancel
@@ -59,7 +51,7 @@ export const BaseEditable = (p: BaseEditableProps) => {
           </span>
         </div>
       ) : (
-        p.renderDisplay(p.value, handleEditClick)
+        p.renderDisplay(p.value, fieldEditor.handleEditClick)
       )}
     </div>
   );
