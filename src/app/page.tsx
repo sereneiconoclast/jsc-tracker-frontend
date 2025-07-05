@@ -38,41 +38,20 @@ export default function Home() {
     setError(error.response?.data?.error || error.message || 'Failed to save changes');
   };
 
-  const onSaveUserNameStart = async (newName: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'name', newName);
-    setUserRecord({ ...userRecord, name: newName });
+  const buildSaveHandlerForUserField = (fieldName: keyof UserRecord) => {
+    return async (newValue: string) => {
+      if (!userRecord || !auth) return;
+      await userApiService.postUser(userRecord.sub, auth.access_token, fieldName, newValue);
+      setUserRecord({ ...userRecord, [fieldName]: newValue });
+    };
   };
 
-  const onSaveUserEmailStart = async (newEmail: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'email', newEmail);
-    setUserRecord({ ...userRecord, email: newEmail });
-  };
-
-  const onSaveSlackProfileStart = async (newProfile: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'slack_profile', newProfile);
-    setUserRecord({ ...userRecord, slack_profile: newProfile });
-  };
-
-  const onSaveTwoPagerStart = async (newTwoPager: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'twopager', newTwoPager);
-    setUserRecord({ ...userRecord, twopager: newTwoPager });
-  };
-
-  const onSaveCMFStart = async (newCMF: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'cmf', newCMF);
-    setUserRecord({ ...userRecord, cmf: newCMF });
-  };
-
-  const onSaveContactInfoStart = async (newContactInfo: string) => {
-    if (!userRecord || !auth) return;
-    await userApiService.postUser(userRecord.sub, auth.access_token, 'contact_info', newContactInfo);
-    setUserRecord({ ...userRecord, contact_info: newContactInfo });
-  };
+  const onSaveUserNameStart = buildSaveHandlerForUserField('name');
+  const onSaveUserEmailStart = buildSaveHandlerForUserField('email');
+  const onSaveSlackProfileStart = buildSaveHandlerForUserField('slack_profile');
+  const onSaveTwoPagerStart = buildSaveHandlerForUserField('twopager');
+  const onSaveCMFStart = buildSaveHandlerForUserField('cmf');
+  const onSaveContactInfoStart = buildSaveHandlerForUserField('contact_info');
 
   return (
     <div className={styles.page}>
