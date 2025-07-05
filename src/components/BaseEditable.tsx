@@ -18,18 +18,7 @@ interface BaseEditableProps {
   containerClassName?: string;
 }
 
-export const BaseEditable = ({
-  value,
-  onSaveStart,
-  onSaveSuccess,
-  onSaveError,
-  onCancel,
-  onEditClick,
-  editingTip,
-  renderInput,
-  renderDisplay,
-  containerClassName
-}: BaseEditableProps) => {
+export const BaseEditable = (p: BaseEditableProps) => {
   const {
     isEditing,
     isSaving,
@@ -39,20 +28,20 @@ export const BaseEditable = ({
     handleEditClick,
     handleInputChange
   } = useEditable({
-    value,
-    onSaveStart,
-    onSaveSuccess,
-    onSaveError,
-    onCancel,
-    onEditClick
+    value: p.value,
+    onSaveStart: p.onSaveStart,
+    onSaveSuccess: p.onSaveSuccess,
+    onSaveError: p.onSaveError,
+    onCancel: p.onCancel,
+    onEditClick: p.onEditClick
   });
 
   return (
-    <div className={containerClassName}>
+    <div className={p.containerClassName}>
       {isEditing ? (
         <div className={styles.editContainer}>
-          {editingTip && <p className={styles.editingTip}>{editingTip}</p>}
-          {renderInput(editedValue, handleInputChange)}
+          {p.editingTip && <p className={styles.editingTip}>{p.editingTip}</p>}
+          {p.renderInput(editedValue, handleInputChange)}
           <span className={styles.editButtons}>
             <button
               onClick={handleSave}
@@ -70,7 +59,7 @@ export const BaseEditable = ({
           </span>
         </div>
       ) : (
-        renderDisplay(value, handleEditClick)
+        p.renderDisplay(p.value, handleEditClick)
       )}
     </div>
   );
