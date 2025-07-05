@@ -1,13 +1,11 @@
 'use client';
 
 import styles from "./page.module.css";
-import { setAuthCookie, getAuthCookie } from '../utils/cookies';
+import { getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
 import { AuthState, UserRecord, ApiError } from '../types/auth';
-import { EditableText } from '../components/EditableText';
-import { MarkdownEditableText } from '../components/MarkdownEditableText';
 import { LoginSection } from '../components/LoginSection';
+import { UserProfile } from '../components/UserProfile';
 import { ErrorDisplay } from '../components/ErrorDisplay';
 import { Footer } from '../components/Footer';
 import { userApiService } from '../services/userApi';
@@ -82,75 +80,20 @@ export default function Home() {
         {!auth ? (
           <LoginSection onAuthChange={setAuth} />
         ) : userRecord ? (
-          <div className={styles.userProfile}>
+          <>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
-            <div className={styles.userHeader}>
-              {userRecord.picture_data ? (
-                <img
-                  src={`data:image/jpeg;base64,${userRecord.picture_data}`}
-                  alt={`${userRecord.name}'s profile picture`}
-                  width={64}
-                  height={64}
-                  className={styles.profilePicture}
-                />
-              ) : (
-                <div className={styles.profilePicturePlaceholder}>
-                  {userRecord.name.charAt(0)}
-                </div>
-              )}
-              <div className={styles.userInfo}>
-                <EditableText
-                  value={userRecord.name}
-                  onSaveStart={onSaveUserNameStart}
-                  onSaveError={onSaveDisplayError}
-                />
-                <EditableText
-                  value={userRecord.email}
-                  onSaveStart={onSaveUserEmailStart}
-                  onSaveError={onSaveDisplayError}
-                />
-                <div>Slack profile URL:{' '}
-                <EditableText
-                  value={userRecord.slack_profile}
-                  editingTip={"Open your Slack profile, click three dots, then \"Copy link to profile\""}
-                  onSaveStart={onSaveSlackProfileStart}
-                  onSaveError={onSaveDisplayError}
-                  isLink={true}
-                /></div>
-                <div className={styles.userTimestamps}>
-                  <p>Joined {formatDistanceToNow(new Date(userRecord.created_at * 1000))} ago</p>
-                  <p>Last seen {formatDistanceToNow(new Date(userRecord.modified_at * 1000))} ago</p>
-                </div>
-                <div>Two-pager URL:{' '}
-                <EditableText
-                  value={userRecord.twopager}
-                  editingTip={"Link to two-pager document"}
-                  onSaveStart={onSaveTwoPagerStart}
-                  onSaveError={onSaveDisplayError}
-                  isLink={true}
-                /></div>
-                <div className={styles.cmfSection}>
-                  <h3>Candidate Market Fit</h3>
-                  <MarkdownEditableText
-                    value={userRecord.cmf}
-                    editingTip={"Describe your candidate market fit. You can use Markdown formatting like **bold** and _italic_ text, bulleted or numbered lists, or [links](https://...)."}
-                    onSaveStart={onSaveCMFStart}
-                    onSaveError={onSaveDisplayError}
-                  />
-                </div>
-                <div className={styles.contactInfoSection}>
-                  <h3>Contact Information</h3>
-                  <MarkdownEditableText
-                    value={userRecord.contact_info}
-                    editingTip={"Add your contact information. You can use Markdown formatting like **bold** text, bulleted lists, or [links](https://...)."}
-                    onSaveStart={onSaveContactInfoStart}
-                    onSaveError={onSaveDisplayError}
-                  />
-                </div>
-              </div>
-            </div>
+            <UserProfile
+              userRecord={userRecord}
+              onSaveUserNameStart={onSaveUserNameStart}
+              onSaveUserEmailStart={onSaveUserEmailStart}
+              onSaveSlackProfileStart={onSaveSlackProfileStart}
+              onSaveTwoPagerStart={onSaveTwoPagerStart}
+              onSaveCMFStart={onSaveCMFStart}
+              onSaveContactInfoStart={onSaveContactInfoStart}
+              onSaveDisplayError={onSaveDisplayError}
+            />
             <pre className={styles.rawData}>{rawData}</pre>
-          </div>
+          </>
         ) : (
           <p>Loading...</p>
         )}
