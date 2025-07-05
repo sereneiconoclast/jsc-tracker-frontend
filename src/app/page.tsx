@@ -24,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     if (auth?.access_token) {
-      userApiService.getUserData(auth.access_token)
+      userApiService.getUser(auth.access_token)
         .then(response => {
           setUserRecord(response.data.users[0]);
           setRawData(JSON.stringify(response.data, null, 2));
@@ -49,37 +49,37 @@ export default function Home() {
 
   const onSaveUserNameStart = async (newName: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'name', newName);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'name', newName);
     setUserRecord({ ...userRecord, name: newName });
   };
 
   const onSaveUserEmailStart = async (newEmail: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'email', newEmail);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'email', newEmail);
     setUserRecord({ ...userRecord, email: newEmail });
   };
 
   const onSaveSlackProfileStart = async (newProfile: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'slack_profile', newProfile);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'slack_profile', newProfile);
     setUserRecord({ ...userRecord, slack_profile: newProfile });
   };
 
   const onSaveTwoPagerStart = async (newTwoPager: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'twopager', newTwoPager);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'twopager', newTwoPager);
     setUserRecord({ ...userRecord, twopager: newTwoPager });
   };
 
   const onSaveCMFStart = async (newCMF: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'cmf', newCMF);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'cmf', newCMF);
     setUserRecord({ ...userRecord, cmf: newCMF });
   };
 
   const onSaveContactInfoStart = async (newContactInfo: string) => {
     if (!userRecord || !auth) return;
-    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'contact_info', newContactInfo);
+    await userApiService.postUser(userRecord.sub, auth.access_token, 'contact_info', newContactInfo);
     setUserRecord({ ...userRecord, contact_info: newContactInfo });
   };
 
