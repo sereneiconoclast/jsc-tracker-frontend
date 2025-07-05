@@ -69,7 +69,7 @@ export const UserProfile = (p: UserProfileProps) => {
             <h3>Candidate Market Fit</h3>
             <MarkdownEditableText
               value={p.userRecord.cmf}
-              editingTip={"Describe your candidate market fit. You can use Markdown formatting like **bold** and _italic_ text, bulleted or numbered lists, or [links](https://...)."}
+              editingTip={"Describe your candidate market fit."}
               onSaveStart={p.onSaveCMFStart}
               onSaveError={p.onSaveDisplayError}
             />
@@ -78,7 +78,7 @@ export const UserProfile = (p: UserProfileProps) => {
             <h3>Contact Information</h3>
             <MarkdownEditableText
               value={p.userRecord.contact_info}
-              editingTip={"Add your contact information. You can use Markdown formatting like **bold** text, bulleted lists, or [links](https://...)."}
+              editingTip={"Add your contact information."}
               onSaveStart={p.onSaveContactInfoStart}
               onSaveError={p.onSaveDisplayError}
             />

@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ApiError } from '../types/auth';
 import { useFieldEditor } from '../hooks/useFieldEditor';
 import styles from '../app/page.module.css';
@@ -28,11 +29,29 @@ export const BaseEditable = (p: BaseEditableProps) => {
     onEditClick: p.onEditClick
   });
 
+  const renderEditingTip = () => {
+    if (!p.editingTip) return null;
+
+    return (
+      <p className={styles.editingTip}>
+        <ReactMarkdown
+          components={{
+            a: ({ node, ...props }) => (
+              <a {...props} target="_blank" rel="noopener noreferrer" />
+            ),
+          }}
+        >
+          {p.editingTip}
+        </ReactMarkdown>
+      </p>
+    );
+  };
+
   return (
     <div className={p.containerClassName}>
       {fieldEditor.isEditing ? (
         <div className={styles.editContainer}>
-          {p.editingTip && <p className={styles.editingTip}>{p.editingTip}</p>}
+          {renderEditingTip()}
           {p.renderInput(fieldEditor.editedValue, fieldEditor.handleInputChange)}
           <span className={styles.editButtons}>
             <button

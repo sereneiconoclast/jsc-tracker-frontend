@@ -15,7 +15,11 @@ interface MarkdownEditableTextProps {
   editingTip?: string;
 }
 
+const MARKDOWN_HELP_TEXT = "You can use [Markdown formatting](https://commonmark.org/help/) like **bold** and _italic_ text, bulleted or numbered lists, or `[links](https://...)`.";
+
 export const MarkdownEditableText = (p: MarkdownEditableTextProps) => {
+  const fullEditingTip = [p.editingTip, MARKDOWN_HELP_TEXT].filter(Boolean).join(' ');
+
   const renderInput = (inputValue: string, onChange: (value: string) => void) => (
     <textarea
       value={inputValue}
@@ -48,7 +52,7 @@ export const MarkdownEditableText = (p: MarkdownEditableTextProps) => {
       onSaveError={p.onSaveError}
       onCancel={p.onCancel}
       onEditClick={p.onEditClick}
-      editingTip={p.editingTip}
+      editingTip={fullEditingTip}
       renderInput={renderInput}
       renderDisplay={renderDisplay}
       containerClassName={styles.markdownContainer}
