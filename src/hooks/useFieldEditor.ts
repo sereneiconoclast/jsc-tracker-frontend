@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ApiError } from '../types/auth';
 
-interface UseEditableProps {
+interface UseFieldEditorProps {
   value: string;
   onSaveStart: (value: string) => Promise<void>;
   onSaveSuccess?: () => void;
@@ -10,14 +10,14 @@ interface UseEditableProps {
   onEditClick?: () => void;
 }
 
-export const useEditable = ({
+export const useFieldEditor = ({
   value,
   onSaveStart,
   onSaveSuccess,
   onSaveError,
   onCancel,
   onEditClick
-}: UseEditableProps) => {
+}: UseFieldEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editedValue, setEditedValue] = useState(value);

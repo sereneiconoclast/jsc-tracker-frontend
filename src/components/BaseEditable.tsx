@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { ApiError } from '../types/auth';
-import { useEditable } from '../hooks/useEditable';
+import { useFieldEditor } from '../hooks/useFieldEditor';
 import styles from '../app/page.module.css';
 
 interface BaseEditableProps {
@@ -27,7 +27,7 @@ export const BaseEditable = (p: BaseEditableProps) => {
     handleCancel,
     handleEditClick,
     handleInputChange
-  } = useEditable({
+  } = useFieldEditor({
     value: p.value,
     onSaveStart: p.onSaveStart,
     onSaveSuccess: p.onSaveSuccess,
