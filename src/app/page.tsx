@@ -6,14 +6,14 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { setAuthCookie, getAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { AuthState, UserData, ApiError } from '../types/auth';
+import { AuthState, UserRecord, ApiError } from '../types/auth';
 import { EditableText } from '../components/EditableText';
 import { MarkdownEditableText } from '../components/MarkdownEditableText';
 import { userApiService } from '../services/userApi';
 
 export default function Home() {
   const [auth, setAuth] = useState<AuthState | null>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userRecord, setUserRecord] = useState<UserRecord | null>(null);
   const [rawData, setRawData] = useState<string>('(Please wait)');
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +26,7 @@ export default function Home() {
     if (auth?.access_token) {
       userApiService.getUserData(auth.access_token)
         .then(response => {
-          setUserData(response.data.users[0]);
+          setUserRecord(response.data.users[0]);
           setRawData(JSON.stringify(response.data, null, 2));
         })
         .catch(error => {
@@ -48,39 +48,39 @@ export default function Home() {
   };
 
   const onSaveUserNameStart = async (newName: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'name', newName);
-    setUserData({ ...userData, name: newName });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'name', newName);
+    setUserRecord({ ...userRecord, name: newName });
   };
 
   const onSaveUserEmailStart = async (newEmail: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'email', newEmail);
-    setUserData({ ...userData, email: newEmail });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'email', newEmail);
+    setUserRecord({ ...userRecord, email: newEmail });
   };
 
   const onSaveSlackProfileStart = async (newProfile: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'slack_profile', newProfile);
-    setUserData({ ...userData, slack_profile: newProfile });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'slack_profile', newProfile);
+    setUserRecord({ ...userRecord, slack_profile: newProfile });
   };
 
   const onSaveTwoPagerStart = async (newTwoPager: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'twopager', newTwoPager);
-    setUserData({ ...userData, twopager: newTwoPager });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'twopager', newTwoPager);
+    setUserRecord({ ...userRecord, twopager: newTwoPager });
   };
 
   const onSaveCMFStart = async (newCMF: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'cmf', newCMF);
-    setUserData({ ...userData, cmf: newCMF });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'cmf', newCMF);
+    setUserRecord({ ...userRecord, cmf: newCMF });
   };
 
   const onSaveContactInfoStart = async (newContactInfo: string) => {
-    if (!userData || !auth) return;
-    await userApiService.updateUserField(userData.sub, auth.access_token, 'contact_info', newContactInfo);
-    setUserData({ ...userData, contact_info: newContactInfo });
+    if (!userRecord || !auth) return;
+    await userApiService.updateUserField(userRecord.sub, auth.access_token, 'contact_info', newContactInfo);
+    setUserRecord({ ...userRecord, contact_info: newContactInfo });
   };
 
   return (
@@ -99,7 +99,7 @@ export default function Home() {
               unoptimized
             />
           </>
-        ) : userData ? (
+        ) : userRecord ? (
           <div className={styles.userProfile}>
             {error && (
               <div className={styles.error}>
@@ -113,45 +113,45 @@ export default function Home() {
               </div>
             )}
             <div className={styles.userHeader}>
-              {userData.picture_data ? (
+              {userRecord.picture_data ? (
                 <img
-                  src={`data:image/jpeg;base64,${userData.picture_data}`}
-                  alt={`${userData.name}'s profile picture`}
+                  src={`data:image/jpeg;base64,${userRecord.picture_data}`}
+                  alt={`${userRecord.name}'s profile picture`}
                   width={64}
                   height={64}
                   className={styles.profilePicture}
                 />
               ) : (
                 <div className={styles.profilePicturePlaceholder}>
-                  {userData.name.charAt(0)}
+                  {userRecord.name.charAt(0)}
                 </div>
               )}
               <div className={styles.userInfo}>
                 <EditableText
-                  value={userData.name}
+                  value={userRecord.name}
                   onSaveStart={onSaveUserNameStart}
                   onSaveError={onSaveDisplayError}
                 />
                 <EditableText
-                  value={userData.email}
+                  value={userRecord.email}
                   onSaveStart={onSaveUserEmailStart}
                   onSaveError={onSaveDisplayError}
                 />
                 <div>Slack profile URL:{' '}
                 <EditableText
-                  value={userData.slack_profile}
+                  value={userRecord.slack_profile}
                   editingTip={"Open your Slack profile, click three dots, then \"Copy link to profile\""}
                   onSaveStart={onSaveSlackProfileStart}
                   onSaveError={onSaveDisplayError}
                   isLink={true}
                 /></div>
                 <div className={styles.userTimestamps}>
-                  <p>Joined {formatDistanceToNow(new Date(userData.created_at * 1000))} ago</p>
-                  <p>Last seen {formatDistanceToNow(new Date(userData.modified_at * 1000))} ago</p>
+                  <p>Joined {formatDistanceToNow(new Date(userRecord.created_at * 1000))} ago</p>
+                  <p>Last seen {formatDistanceToNow(new Date(userRecord.modified_at * 1000))} ago</p>
                 </div>
                 <div>Two-pager URL:{' '}
                 <EditableText
-                  value={userData.twopager}
+                  value={userRecord.twopager}
                   editingTip={"Link to two-pager document"}
                   onSaveStart={onSaveTwoPagerStart}
                   onSaveError={onSaveDisplayError}
@@ -160,7 +160,7 @@ export default function Home() {
                 <div className={styles.cmfSection}>
                   <h3>Candidate Market Fit</h3>
                   <MarkdownEditableText
-                    value={userData.cmf}
+                    value={userRecord.cmf}
                     editingTip={"Describe your candidate market fit. You can use Markdown formatting like **bold** and _italic_ text, bulleted or numbered lists, or [links](https://...)."}
                     onSaveStart={onSaveCMFStart}
                     onSaveError={onSaveDisplayError}
@@ -169,7 +169,7 @@ export default function Home() {
                 <div className={styles.contactInfoSection}>
                   <h3>Contact Information</h3>
                   <MarkdownEditableText
-                    value={userData.contact_info}
+                    value={userRecord.contact_info}
                     editingTip={"Add your contact information. You can use Markdown formatting like **bold** text, bulleted lists, or [links](https://...)."}
                     onSaveStart={onSaveContactInfoStart}
                     onSaveError={onSaveDisplayError}

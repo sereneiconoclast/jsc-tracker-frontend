@@ -2,7 +2,7 @@ export interface AuthState {
   access_token: string;
 }
 
-export interface UserData {
+export interface UserRecord {
   sub: string;
   name: string;
   email: string;
