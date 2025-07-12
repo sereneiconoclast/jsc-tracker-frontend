@@ -10,8 +10,17 @@ export class UserApiService {
     );
   }
 
-  async getUser(accessToken: string) {
-    return axios.get(`${this.baseUrl}/user/-?access_token=${accessToken}`);
+  async getUser(accessToken: string, userId?: string) {
+    userId ||= '-'; // look up the user owning the accessToken
+    return axios.get(`${this.baseUrl}/user/${userId}?access_token=${accessToken}`);
+  }
+
+  async createContact(userId: string | undefined, accessToken: string) {
+    userId ||= '-'; // look up the user owning the accessToken
+    return axios.post(
+      `${this.baseUrl}/user/${userId}/contact/new?access_token=${accessToken}`,
+      {}
+    );
   }
 }
 
