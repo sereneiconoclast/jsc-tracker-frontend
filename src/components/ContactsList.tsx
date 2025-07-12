@@ -6,6 +6,11 @@ import styles from './ContactsList.module.css';
 interface ContactsListProps {
   contactRecords: ContactRecord[];
   onAddContact: () => void;
+  onSaveContactName: (contactId: string, newValue: string) => Promise<void>;
+  onSaveContactInfo: (contactId: string, newValue: string) => Promise<void>;
+  onSaveContactNotes: (contactId: string, newValue: string) => Promise<void>;
+  onSaveContactStatus: (contactId: string, newValue: string) => Promise<void>;
+  onSaveDisplayError: (error: any) => void;
 }
 
 export function ContactsList(p: ContactsListProps) {
@@ -28,7 +33,15 @@ export function ContactsList(p: ContactsListProps) {
       ) : (
         <div className={styles.contactsGrid}>
           {p.contactRecords.map((record) => (
-            <Contact key={record.contact_id} record={record} />
+            <Contact
+              key={record.contact_id}
+              record={record}
+              onSaveContactName={(newValue) => p.onSaveContactName(record.contact_id, newValue)}
+              onSaveContactInfo={(newValue) => p.onSaveContactInfo(record.contact_id, newValue)}
+              onSaveContactNotes={(newValue) => p.onSaveContactNotes(record.contact_id, newValue)}
+              onSaveContactStatus={(newValue) => p.onSaveContactStatus(record.contact_id, newValue)}
+              onSaveDisplayError={p.onSaveDisplayError}
+            />
           ))}
         </div>
       )}

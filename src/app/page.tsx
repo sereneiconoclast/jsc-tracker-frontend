@@ -50,6 +50,20 @@ export default function Home() {
     };
   };
 
+  const buildSaveHandlerForContactField = (fieldName: keyof ContactRecord) => {
+    return async (contactId: string, newValue: string) => {
+      if (!userRecord || !auth) return;
+      await userApiService.postContact(auth.access_token, contactId, fieldName, newValue, userRecord.sub);
+      setContactRecords(prevContacts =>
+        prevContacts.map(contact =>
+          contact.contact_id === contactId
+            ? { ...contact, [fieldName]: newValue }
+            : contact
+        )
+      );
+    };
+  };
+
   const onSaveUserNameStart = buildSaveHandlerForUserField('name');
   const onSaveUserEmailStart = buildSaveHandlerForUserField('email');
   const onSaveSlackProfileStart = buildSaveHandlerForUserField('slack_profile');
@@ -57,11 +71,16 @@ export default function Home() {
   const onSaveCMFStart = buildSaveHandlerForUserField('cmf');
   const onSaveContactInfoStart = buildSaveHandlerForUserField('contact_info');
 
+  const onSaveContactNameStart = buildSaveHandlerForContactField('name');
+  const onSaveContactInfoFieldStart = buildSaveHandlerForContactField('contact_info');
+  const onSaveContactNotesStart = buildSaveHandlerForContactField('notes');
+  const onSaveContactStatusStart = buildSaveHandlerForContactField('status');
+
   const handleAddContact = async () => {
     if (!userRecord || !auth) return;
 
     try {
-      const response = await userApiService.createContact(userRecord.sub, auth.access_token);
+      const response = await userApiService.createContact(auth.access_token, userRecord.sub);
       const newContact = response.data.contact;
       // Sends a function to React to make the update, since it can happen
       // asynchronously; this avoids the possibility of using a stale value
@@ -92,6 +111,11 @@ export default function Home() {
             <ContactsList
               contactRecords={contactRecords}
               onAddContact={handleAddContact}
+              onSaveContactName={onSaveContactNameStart}
+              onSaveContactInfo={onSaveContactInfoFieldStart}
+              onSaveContactNotes={onSaveContactNotesStart}
+              onSaveContactStatus={onSaveContactStatusStart}
+              onSaveDisplayError={onSaveDisplayError}
             />
             <pre className={styles.rawData}>{rawData}</pre>
           </div>
