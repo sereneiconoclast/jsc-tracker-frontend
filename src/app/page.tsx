@@ -63,13 +63,18 @@ export default function Home() {
     return async (contactId: string, newValue: string) => {
       if (!userRecord || !auth) return;
       await userApiService.postContact(auth.access_token, contactId, fieldName, newValue, userRecord.sub);
-      setContactRecords(prevContacts =>
-        prevContacts.map(contact =>
-          contact.contact_id === contactId
-            ? { ...contact, [fieldName]: newValue }
-            : contact
-        )
-      );
+      setContactRecords(prevContacts => {
+        // Find the contact that was updated
+        const updatedContact = prevContacts.find(contact => contact.contact_id === contactId);
+        if (!updatedContact) return prevContacts;
+
+        // Update the contact with the new value
+        const contactWithUpdate = { ...updatedContact, [fieldName]: newValue };
+
+        // Move the updated contact to the front of the list
+        const otherContacts = prevContacts.filter(contact => contact.contact_id !== contactId);
+        return [contactWithUpdate, ...otherContacts];
+      });
     };
   };
 
