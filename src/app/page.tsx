@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
-import { getAuthCookie } from '../utils/cookies';
+import { getAuthCookie, clearAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { AuthState, UserRecord, ContactRecord, ApiError } from '../types/auth';
 import { LoginSection } from '../components/LoginSection';
@@ -37,6 +37,15 @@ export default function Home() {
         });
     }
   }, [auth]);
+
+  const handleLogout = () => {
+    clearAuthCookie();
+    setAuth(null);
+    setUserRecord(null);
+    setContactRecords([]);
+    setRawData('(Please wait)');
+    setError(null);
+  };
 
   const onSaveDisplayError = (error: ApiError) => {
     setError(error.response?.data?.error || error.message || 'Failed to save changes');
@@ -98,6 +107,11 @@ export default function Home() {
         ) : userRecord ? (
           <div className={styles.contentContainer}>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
+            <div className={styles.logoutContainer}>
+              <button className={styles.logoutButton} onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
             <UserProfile
               userRecord={userRecord}
               onSaveUserNameStart={onSaveUserNameStart}

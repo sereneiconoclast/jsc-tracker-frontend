@@ -15,3 +15,7 @@ export function getAuthCookie() {
     return null;
   }
 }
+
+export function clearAuthCookie() {
+  document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+}
