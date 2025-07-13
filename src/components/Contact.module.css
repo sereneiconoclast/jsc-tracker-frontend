@@ -78,3 +78,14 @@
 .notesLink a:hover {
   text-decoration: underline;
 }
+
+/* Style links within the Contact component */
+.contact a {
+  color: #0066cc;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.contact a:hover {
+  text-decoration: underline;
+}
