@@ -52,40 +52,10 @@
   color: #333;
 }
 
-.markdownDisplay a {
-  color: #0066cc;
-  text-decoration: none;
-}
-
-.markdownDisplay a:hover {
-  text-decoration: underline;
-}
-
 .markdownDisplay blockquote {
   margin: 0;
   padding-left: 16px;
   border-left: 4px solid #e0e0e0;
   font-size: 1.1em;
   color: #666;
-}
-
-.notesLink a {
-  color: #0066cc;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.notesLink a:hover {
-  text-decoration: underline;
-}
-
-/* Style links within the Contact component */
-.contact a {
-  color: #0066cc;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.contact a:hover {
-  text-decoration: underline;
 }

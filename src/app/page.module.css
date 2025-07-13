@@ -24,6 +24,32 @@
   position: relative;
 }
 
+/* Global link styling for consistent appearance across the application */
+.page a {
+  color: #0070f3;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.page a:hover {
+  text-decoration: underline;
+}
+
+/* Override for specific cases where we don't want the global link style */
+.page .editLink,
+.page .footer a,
+.page .ctas a {
+  color: inherit;
+  text-decoration: none;
+  word-break: normal;
+}
+
+.page .editLink:hover,
+.page .footer a:hover,
+.page .ctas a:hover {
+  text-decoration: underline;
+}
+
 /* Ensure content stays above the overlay */
 .main, .footer {
   position: relative;
@@ -416,15 +442,6 @@ a.secondary {
   margin: 0;
 }
 
-.markdownDisplay a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.markdownDisplay a:hover {
-  text-decoration: underline;
-}
-
 .cmfSection {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -447,13 +464,4 @@ a.secondary {
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
   color: var(--foreground);
-}
-
-.userInfo a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.userInfo a:hover {
-  text-decoration: underline;
 }
