@@ -36,7 +36,7 @@ export const BaseEditable = (p: BaseEditableProps) => {
       <p className={styles.editingTip}>
         <ReactMarkdown
           components={{
-            a: ({ node, ...props }) => (
+            a: ({ ...props }) => (
               <a {...props} target="_blank" rel="noopener noreferrer" />
             ),
           }}

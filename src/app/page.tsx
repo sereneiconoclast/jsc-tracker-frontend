@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import { getAuthCookie, clearAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
 import { AuthState, UserRecord, ContactRecord, ApiError } from '../types/auth';
+import { AxiosResponse } from 'axios';
 import { LoginSection } from '../components/LoginSection';
 import { UserProfile } from '../components/UserProfile';
 import { ContactsList } from '../components/ContactsList';
@@ -27,12 +28,12 @@ export default function Home() {
   useEffect(() => {
     if (auth?.access_token) {
       userApiService.getUser(auth.access_token)
-        .then((response: any) => {
+        .then((response: AxiosResponse<{ users: UserRecord[]; contacts: ContactRecord[] }>) => {
           setUserRecord(response.data.users[0]);
           setContactRecords(response.data.contacts || []);
           setRawData(JSON.stringify(response.data, null, 2));
         })
-        .catch((error: any) => {
+        .catch((error: ApiError) => {
           setRawData(`Error: ${error.message}`);
         });
     }
@@ -99,8 +100,8 @@ export default function Home() {
       // Sends a function to React to make the update, since it can happen
       // asynchronously; this avoids the possibility of using a stale value
       setContactRecords(prevContacts => [newContact, ...prevContacts]);
-    } catch (error: any) {
-      onSaveDisplayError(error);
+    } catch (error: unknown) {
+      onSaveDisplayError(error as ApiError);
     }
   };
 

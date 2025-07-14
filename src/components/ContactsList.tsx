@@ -1,6 +1,6 @@
 import React from 'react';
 import { Contact } from './Contact';
-import { ContactRecord } from '../types/auth';
+import { ContactRecord, ApiError } from '../types/auth';
 import styles from './ContactsList.module.css';
 
 interface ContactsListProps {
@@ -10,7 +10,7 @@ interface ContactsListProps {
   onSaveContactInfo: (contactId: string, newValue: string) => Promise<void>;
   onSaveContactNotes: (contactId: string, newValue: string) => Promise<void>;
   onSaveContactStatus: (contactId: string, newValue: string) => Promise<void>;
-  onSaveDisplayError: (error: any) => void;
+  onSaveDisplayError: (error: ApiError) => void;
 }
 
 export function ContactsList(p: ContactsListProps) {
@@ -28,7 +28,7 @@ export function ContactsList(p: ContactsListProps) {
 
       {p.contactRecords.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>No contacts yet. Click "Add Contact" to create your first contact.</p>
+          <p>No contacts yet. Click &quot;Add Contact&quot; to create your first contact.</p>
         </div>
       ) : (
         <div className={styles.contactsGrid}>

@@ -33,7 +33,7 @@ export const MarkdownEditableText = (p: MarkdownEditableTextProps) => {
     <div className={styles.markdownDisplay}>
       <ReactMarkdown
         components={{
-          a: ({ node, ...props }) => (
+          a: ({ ...props }) => (
             <a {...props} target="_blank" rel="noopener noreferrer" />
           ),
         }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContactRecord } from '../types/auth';
+import { ContactRecord, ApiError } from '../types/auth';
 import { EditableText } from './EditableText';
 import { MarkdownEditableText } from './MarkdownEditableText';
 import styles from './Contact.module.css';
@@ -10,7 +10,7 @@ interface ContactProps {
   onSaveContactInfo: (newValue: string) => Promise<void>;
   onSaveContactNotes: (newValue: string) => Promise<void>;
   onSaveContactStatus: (newValue: string) => Promise<void>;
-  onSaveDisplayError: (error: any) => void;
+  onSaveDisplayError: (error: ApiError) => void;
 }
 
 export function Contact(p: ContactProps) {
