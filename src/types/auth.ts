@@ -38,3 +38,13 @@ export interface ApiError {
   };
   message: string;
 }
+
+export interface UserApiResponse {
+  users: UserRecord[];
+  contacts: ContactRecord[];
+  jsc: null;
+  jsc_members: null;
+  roles?: {
+    [role: string]: string;
+  };
+}

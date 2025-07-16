@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import { getAuthCookie, clearAuthCookie } from '../utils/cookies';
 import { useState, useEffect } from 'react';
-import { AuthState, UserRecord, ContactRecord, ApiError } from '../types/auth';
+import { AuthState, UserRecord, ContactRecord, ApiError, UserApiResponse } from '../types/auth';
 import { AxiosResponse } from 'axios';
 import { LoginSection } from '../components/LoginSection';
 import { UserProfile } from '../components/UserProfile';
@@ -19,6 +19,7 @@ export default function Home() {
   const [contactRecords, setContactRecords] = useState<ContactRecord[]>([]);
   const [rawData, setRawData] = useState<string>('(Please wait)');
   const [error, setError] = useState<string | null>(null);
+  const [userRoles, setUserRoles] = useState<{ [role: string]: string } | null>(null);
 
   useEffect(() => {
     const cookie = getAuthCookie();
@@ -28,9 +29,10 @@ export default function Home() {
   useEffect(() => {
     if (auth?.access_token) {
       userApiService.getUser(auth.access_token)
-        .then((response: AxiosResponse<{ users: UserRecord[]; contacts: ContactRecord[] }>) => {
+        .then((response: AxiosResponse<UserApiResponse>) => {
           setUserRecord(response.data.users[0]);
           setContactRecords(response.data.contacts || []);
+          setUserRoles(response.data.roles || null);
           setRawData(JSON.stringify(response.data, null, 2));
         })
         .catch((error: ApiError) => {
@@ -44,6 +46,7 @@ export default function Home() {
     setAuth(null);
     setUserRecord(null);
     setContactRecords([]);
+    setUserRoles(null);
     setRawData('(Please wait)');
     setError(null);
   };
@@ -114,6 +117,17 @@ export default function Home() {
           <div className={styles.contentContainer}>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
             <div className={styles.logoutContainer}>
+              {userRoles && Object.entries(userRoles).map(([role, url]) => (
+                <a
+                  key={role}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.adminLink}
+                >
+                  Switch to role: {role.charAt(0).toUpperCase() + role.slice(1)}
+                </a>
+              ))}
               <button className={styles.logoutButton} onClick={handleLogout}>
                 Logout
               </button>
