@@ -58,7 +58,7 @@ export default function Home() {
   const buildSaveHandlerForUserField = (fieldName: keyof UserRecord) => {
     return async (newValue: string) => {
       if (!userRecord || !auth) return;
-      await userApiService.postUser(userRecord.sub, auth.access_token, fieldName, newValue);
+      await userApiService.postUser(auth.access_token, fieldName, newValue, userRecord.sub);
       setUserRecord({ ...userRecord, [fieldName]: newValue });
     };
   };
@@ -66,7 +66,7 @@ export default function Home() {
   const buildSaveHandlerForContactField = (fieldName: keyof ContactRecord) => {
     return async (contactId: string, newValue: string) => {
       if (!userRecord || !auth) return;
-      await userApiService.postContact(auth.access_token, contactId, fieldName, newValue, userRecord.sub);
+      await userApiService.postContact(auth.access_token, contactId, fieldName, newValue);
       setContactRecords(prevContacts => {
         // Find the contact that was updated
         const updatedContact = prevContacts.find(contact => contact.contact_id === contactId);
@@ -98,7 +98,7 @@ export default function Home() {
     if (!userRecord || !auth) return;
 
     try {
-      const response = await userApiService.createContact(auth.access_token, userRecord.sub);
+      const response = await userApiService.createContact(auth.access_token);
       const newContact = response.data.contact;
       // Sends a function to React to make the update, since it can happen
       // asynchronously; this avoids the possibility of using a stale value

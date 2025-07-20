@@ -16,6 +16,7 @@ export class UserApiService {
     );
   }
 
+  // TODO: Consider whether we ever want to allow passing a userId here
   async createContact(accessToken: string, userId?: string) {
     userId ||= '-'; // look up the user owning the accessToken
     return axios.post(
@@ -24,6 +25,7 @@ export class UserApiService {
     );
   }
 
+  // TODO: Consider whether we ever want to allow passing a userId here
   async postContact(accessToken: string, contactId: string, field: string, value: string, userId?: string) {
     userId ||= '-'; // look up the user owning the accessToken
     return axios.post(
