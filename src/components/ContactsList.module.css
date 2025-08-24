@@ -1,0 +1,59 @@
+.contactsList {
+  margin-top: 40px;
+}
+
+.contactsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.contactsHeader h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.addContactButton {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addContactButton:hover {
+  background-color: #0052a3;
+}
+
+.addContactButton:active {
+  background-color: #004080;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #e0e0e0;
+}
+
+.emptyState p {
+  margin: 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.contactsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
