@@ -6,9 +6,10 @@ import styles from '../app/page.module.css';
 interface AdminUserSearchFormProps {
   searchParams: AdminUserSearchParams;
   onSearchParamsChange: (params: Partial<AdminUserSearchParams>) => void;
+  onSearch: () => void;
 }
 
-export const AdminUserSearchForm = ({ searchParams, onSearchParamsChange }: AdminUserSearchFormProps) => {
+export const AdminUserSearchForm = ({ searchParams, onSearchParamsChange, onSearch }: AdminUserSearchFormProps) => {
   const handleInputChange = (field: keyof AdminUserSearchParams, value: string | boolean) => {
     onSearchParamsChange({ [field]: value });
   };
@@ -62,6 +63,15 @@ export const AdminUserSearchForm = ({ searchParams, onSearchParamsChange }: Admi
             Admin only
           </label>
         </div>
+      </div>
+
+      <div className={styles.searchButtonContainer}>
+        <button
+          className={styles.searchButton}
+          onClick={onSearch}
+        >
+          Search
+        </button>
       </div>
     </div>
   );
