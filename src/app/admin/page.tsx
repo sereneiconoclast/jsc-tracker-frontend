@@ -41,6 +41,10 @@ export default function AdminPage() {
     setSearchParams(prev => ({ ...prev, jsc: jscNumber }));
   };
 
+  const handleSearchParamsChange = (params: Partial<AdminUserSearchParams>) => {
+    setSearchParams(prev => ({ ...prev, ...params }));
+  };
+
   if (!accessToken) {
     return (
       <div className={styles.page}>
@@ -65,7 +69,7 @@ export default function AdminPage() {
 
             <AdminUserSearchForm
               searchParams={searchParams}
-              onSearchParamsChange={setSearchParams}
+              onSearchParamsChange={handleSearchParamsChange}
               onSearch={handleSearch}
             />
 
