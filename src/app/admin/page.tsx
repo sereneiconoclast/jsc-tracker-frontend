@@ -124,8 +124,16 @@ export default function AdminPage() {
         if (response?.data?.error?.includes('No such JSC')) {
           throw new Error(`JSC ${targetJsc} does not exist`);
         }
+        // Handle other API errors
+        if (response?.data?.error) {
+          throw new Error(response.data.error);
+        }
       }
-      throw error;
+      // Handle network errors or other issues
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('An unknown error occurred');
     }
   };
 

@@ -21,6 +21,8 @@ export const AdminUserResultsTable = ({
 }: AdminUserResultsTableProps) => {
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [targetJsc, setTargetJsc] = useState<string>('');
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const isAdmin = (user: AdminUserRecord) => {
     return user.roles && user.roles.includes('admin');
@@ -46,15 +48,21 @@ export const AdminUserResultsTable = ({
 
   const handleMoveClick = async () => {
     if (selectedUsers.size === 0) {
+      setErrorMessage('First select one or more people to move');
+      setShowErrorDialog(true);
       return;
     }
 
     if (!targetJsc.trim()) {
+      setErrorMessage('First enter the number of an existing JSC');
+      setShowErrorDialog(true);
       return;
     }
 
     const jscNumber = parseInt(targetJsc.trim());
     if (isNaN(jscNumber) || jscNumber <= 0) {
+      setErrorMessage('Please enter a valid positive integer for the JSC number');
+      setShowErrorDialog(true);
       return;
     }
 
@@ -63,8 +71,10 @@ export const AdminUserResultsTable = ({
       setSelectedUsers(new Set());
       setTargetJsc('');
     } catch (error) {
-      // Error handling is done in the parent component
-      console.error('Move failed:', error);
+      // Display error to user
+      const message = error instanceof Error ? error.message : 'An unknown error occurred';
+      setErrorMessage(message);
+      setShowErrorDialog(true);
     }
   };
 
@@ -104,6 +114,29 @@ export const AdminUserResultsTable = ({
 
   const renderAdminCell = (user: AdminUserRecord) => {
     return isAdmin(user) ? <span>👑</span> : <span></span>;
+  };
+
+  const renderErrorDialog = () => {
+    if (!showErrorDialog) return null;
+
+    return (
+      <div className={styles.dialogOverlay}>
+        <div className={styles.dialog}>
+          <h3>Error</h3>
+          <div className={styles.dialogContent}>
+            <p>{errorMessage}</p>
+          </div>
+          <div className={styles.dialogButtons}>
+            <button
+              className={styles.dialogButton}
+              onClick={() => setShowErrorDialog(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -213,6 +246,8 @@ export const AdminUserResultsTable = ({
           Move!
         </button>
       </div>
+
+      {renderErrorDialog()}
     </div>
   );
 };
