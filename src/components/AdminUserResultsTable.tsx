@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { AdminUserRecord } from '../services/adminApi';
 import styles from '../app/page.module.css';
 
@@ -8,16 +9,63 @@ interface AdminUserResultsTableProps {
   loading: boolean;
   error: string | null;
   onJscClick: (jscNumber: string) => void;
+  onMoveUsers: (userSubs: string[], targetJsc: string) => Promise<void>;
 }
 
 export const AdminUserResultsTable = ({
   users,
   loading,
   error,
-  onJscClick
+  onJscClick,
+  onMoveUsers
 }: AdminUserResultsTableProps) => {
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [targetJsc, setTargetJsc] = useState<string>('');
+
   const isAdmin = (user: AdminUserRecord) => {
     return user.roles && user.roles.includes('admin');
+  };
+
+  const handleUserSelection = (userSub: string, checked: boolean) => {
+    const newSelected = new Set(selectedUsers);
+    if (checked) {
+      newSelected.add(userSub);
+    } else {
+      newSelected.delete(userSub);
+    }
+    setSelectedUsers(newSelected);
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedUsers(new Set(users.map(user => user.sub)));
+    } else {
+      setSelectedUsers(new Set());
+    }
+  };
+
+  const handleMoveClick = async () => {
+    if (selectedUsers.size === 0) {
+      return;
+    }
+
+    if (!targetJsc.trim()) {
+      return;
+    }
+
+    const jscNumber = parseInt(targetJsc.trim());
+    if (isNaN(jscNumber) || jscNumber <= 0) {
+      return;
+    }
+
+    try {
+      await onMoveUsers(Array.from(selectedUsers), targetJsc.trim());
+      setSelectedUsers(new Set());
+      setTargetJsc('');
+    } catch (error) {
+      // Error handling is done in the parent component
+      console.error('Move failed:', error);
+    }
   };
 
   const renderUserPicture = (user: AdminUserRecord) => {
@@ -80,6 +128,7 @@ export const AdminUserResultsTable = ({
         <table className={styles.adminUserTable}>
           <thead>
             <tr>
+              <th>Select</th>
               <th>Picture</th>
               <th>Name</th>
               <th>Email</th>
@@ -89,6 +138,7 @@ export const AdminUserResultsTable = ({
           </thead>
           <tbody>
             <tr>
+              <td>➖</td>
               <td>➖</td>
               <td>(No matches)</td>
               <td>➖</td>
@@ -106,6 +156,13 @@ export const AdminUserResultsTable = ({
       <table className={styles.adminUserTable}>
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={selectedUsers.size === users.length && users.length > 0}
+                onChange={(e) => handleSelectAll(e.target.checked)}
+              />
+            </th>
             <th>Picture</th>
             <th>Name</th>
             <th>Email</th>
@@ -116,6 +173,13 @@ export const AdminUserResultsTable = ({
         <tbody>
           {users.map((user) => (
             <tr key={user.sub}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedUsers.has(user.sub)}
+                  onChange={(e) => handleUserSelection(user.sub, e.target.checked)}
+                />
+              </td>
               <td>{renderUserPicture(user)}</td>
               <td>{user.name}</td>
               <td>
@@ -129,6 +193,26 @@ export const AdminUserResultsTable = ({
           ))}
         </tbody>
       </table>
+
+      <div className={styles.moveInterface}>
+        <label>
+          Move to JSC:
+          <input
+            type="text"
+            value={targetJsc}
+            onChange={(e) => setTargetJsc(e.target.value)}
+            placeholder="Enter JSC number"
+            className={styles.jscInput}
+          />
+        </label>
+        <button
+          className={styles.moveButton}
+          onClick={handleMoveClick}
+          disabled={selectedUsers.size === 0}
+        >
+          Move!
+        </button>
+      </div>
     </div>
   );
 };

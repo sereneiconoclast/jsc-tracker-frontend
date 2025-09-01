@@ -595,6 +595,128 @@ a.secondary {
   background-color: #003d7a;
 }
 
+/* Dialog styles */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dialog h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.dialogContent {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.dialogContent p {
+  margin: 0 0 1rem 0;
+}
+
+.dialogContent ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.dialogButton {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dialogButton:first-child {
+  background-color: #0070f3;
+  color: white;
+}
+
+.dialogButton:first-child:hover {
+  background-color: #0051a2;
+}
+
+.dialogButton:last-child {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.dialogButton:last-child:hover {
+  background-color: #e1e1e1;
+}
+
+/* Move interface styles */
+.moveInterface {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.moveInterface label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.jscInput {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 120px;
+}
+
+.moveButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.moveButton:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.moveButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
 .adminTableContainer {
   background: var(--gray-alpha-50);
   border: 1px solid var(--gray-alpha-200);
