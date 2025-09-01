@@ -23,7 +23,6 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [confirmDialogContent, setConfirmDialogContent] = useState('');
   const [pendingMove, setPendingMove] = useState<{
     userSubs: string[];
     targetJsc: string;
@@ -82,33 +81,8 @@ export default function AdminPage() {
       const targetJscResponse = await adminApiService.searchUsers(accessToken, { jsc: targetJsc });
       const targetJscUsers = targetJscResponse.data.users;
 
-      // Get the selected users from the current search results
-      const selectedUsers = users.filter(user => userSubs.includes(user.sub));
-
-      // Build confirmation dialog content
-      let dialogContent = `<p>Move these people into JSC ${targetJsc}? `;
-
-      if (targetJscUsers.length === 0) {
-        dialogContent += 'This JSC is currently empty.</p>';
-      } else {
-        dialogContent += `It contains ${targetJscUsers.length} members:</p>`;
-        dialogContent += '<ul>';
-        targetJscUsers.forEach(user => {
-          dialogContent += `<li>${user.name}</li>`;
-        });
-        dialogContent += '</ul>';
-      }
-
-      dialogContent += '<p>New members:</p><ul>';
-      selectedUsers.forEach(user => {
-        const status = user.jsc && user.jsc !== '-1' ? `(currently in JSC ${user.jsc})` : '(not in any JSC)';
-        dialogContent += `<li>${user.name} ${status}</li>`;
-      });
-      dialogContent += '</ul>';
-
       // Store pending move data and show confirmation dialog
       setPendingMove({ userSubs, targetJsc, targetJscUsers });
-      setConfirmDialogContent(dialogContent);
       setShowConfirmDialog(true);
 
       // Return a promise that will be resolved when the user confirms
@@ -220,14 +194,40 @@ export default function AdminPage() {
       </main>
 
       {/* Confirmation Dialog */}
-      {showConfirmDialog && (
+      {showConfirmDialog && pendingMove && (
         <div className={styles.dialogOverlay}>
           <div className={styles.dialog}>
             <h3>Confirm Move</h3>
-            <div
-              className={styles.dialogContent}
-              dangerouslySetInnerHTML={{ __html: confirmDialogContent }}
-            />
+            <div className={styles.dialogContent}>
+              <p>Move these people into JSC {pendingMove.targetJsc}?</p>
+
+              {pendingMove.targetJscUsers.length === 0 ? (
+                <p>This JSC is currently empty.</p>
+              ) : (
+                <>
+                  <p>It contains {pendingMove.targetJscUsers.length} members:</p>
+                  <ul>
+                    {pendingMove.targetJscUsers.map(user => (
+                      <li key={user.sub}>{user.name}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              <p>New members:</p>
+              <ul>
+                {users
+                  .filter(user => pendingMove.userSubs.includes(user.sub))
+                  .map(user => {
+                    const status = user.jsc && user.jsc !== '-1'
+                      ? `(currently in JSC ${user.jsc})`
+                      : '(not in any JSC)';
+                    return (
+                      <li key={user.sub}>{user.name} {status}</li>
+                    );
+                  })}
+              </ul>
+            </div>
             <div className={styles.dialogButtons}>
               <button className={styles.dialogButton} onClick={handleConfirmMove}>
                 OK
