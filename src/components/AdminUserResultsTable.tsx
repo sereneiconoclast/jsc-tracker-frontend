@@ -234,7 +234,7 @@ export const AdminUserResultsTable = ({
             type="text"
             value={targetJsc}
             onChange={(e) => setTargetJsc(e.target.value)}
-            placeholder="Enter JSC number"
+            placeholder="Enter JSC#"
             className={styles.jscInput}
           />
         </label>

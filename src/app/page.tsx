@@ -10,6 +10,7 @@ import { UserProfile } from '../components/UserProfile';
 import { ContactsList } from '../components/ContactsList';
 import { ErrorDisplay } from '../components/ErrorDisplay';
 import { Footer } from '../components/Footer';
+import { LoginExpirationWarning } from '../components/LoginExpirationWarning';
 import { userApiService } from '../services/userApi';
 
 export default function Home() {
@@ -116,6 +117,7 @@ export default function Home() {
         ) : userRecord ? (
           <div className={styles.contentContainer}>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
+            <LoginExpirationWarning />
             <div className={styles.logoutContainer}>
               {userRoles && Object.entries(userRoles).map(([role, url]) => (
                 <a
