@@ -21,6 +21,16 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: #333;
+  flex: 1;
+  min-width: 0; /* Allow text to wrap if needed */
+}
+
+.contactIdContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0; /* Prevent shrinking */
+  white-space: nowrap; /* Keep everything on one line */
 }
 
 .contactId {
@@ -30,6 +40,25 @@
   background-color: #f5f5f5;
   padding: 4px 8px;
   border-radius: 4px;
+}
+
+.archiveLink {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+  opacity: 1; /* Ensure it's visible */
+  display: inline-block; /* Ensure it displays properly */
+}
+
+.archiveLink:hover {
+  color: #e53e3e;
+  background-color: rgba(229, 62, 62, 0.1);
 }
 
 .contactSection {

@@ -10,6 +10,7 @@ interface ContactProps {
   onSaveContactInfo: (newValue: string) => Promise<void>;
   onSaveContactNotes: (newValue: string) => Promise<void>;
   onSaveContactStatus: (newValue: string) => Promise<void>;
+  onArchiveContact: (contactId: string) => Promise<void>;
   onSaveDisplayError: (error: ApiError) => void;
 }
 
@@ -25,7 +26,16 @@ export function Contact(p: ContactProps) {
             editingTip="Click to edit contact name"
           />
         </h3>
-        <span className={styles.contactId}>{p.record.contact_id}</span>
+        <div className={styles.contactIdContainer}>
+          <span className={styles.contactId}>{p.record.contact_id}</span>
+          <button
+            className={styles.archiveLink}
+            onClick={() => p.onArchiveContact(p.record.contact_id)}
+            title="Archive this contact"
+          >
+            (archive)
+          </button>
+        </div>
       </div>
 
       <div className={styles.contactSection}>

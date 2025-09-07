@@ -10,6 +10,7 @@ interface ContactsListProps {
   onSaveContactInfo: (contactId: string, newValue: string) => Promise<void>;
   onSaveContactNotes: (contactId: string, newValue: string) => Promise<void>;
   onSaveContactStatus: (contactId: string, newValue: string) => Promise<void>;
+  onArchiveContact: (contactId: string) => Promise<void>;
   onSaveDisplayError: (error: ApiError) => void;
 }
 
@@ -40,6 +41,7 @@ export function ContactsList(p: ContactsListProps) {
               onSaveContactInfo={(newValue) => p.onSaveContactInfo(record.contact_id, newValue)}
               onSaveContactNotes={(newValue) => p.onSaveContactNotes(record.contact_id, newValue)}
               onSaveContactStatus={(newValue) => p.onSaveContactStatus(record.contact_id, newValue)}
+              onArchiveContact={(contactId) => p.onArchiveContact(contactId)}
               onSaveDisplayError={p.onSaveDisplayError}
             />
           ))}

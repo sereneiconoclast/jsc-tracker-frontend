@@ -21,6 +21,7 @@ export default function Home() {
   const [rawData, setRawData] = useState<string>('(Please wait)');
   const [error, setError] = useState<string | null>(null);
   const [userRoles, setUserRoles] = useState<{ [role: string]: string } | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const cookie = getAuthCookie();
@@ -109,6 +110,33 @@ export default function Home() {
     }
   };
 
+  const handleArchiveContact = async (contactId: string) => {
+    if (!auth?.access_token) {
+      setError('Not authenticated');
+      return;
+    }
+
+    try {
+      await userApiService.archiveContact(auth.access_token, contactId);
+
+      // Find the contact name for the success message
+      const contactToArchive = contactRecords.find(c => c.contact_id === contactId);
+      const contactName = contactToArchive?.name || 'Unknown';
+
+      // Remove the contact from the display
+      setContactRecords(prev => prev.filter(c => c.contact_id !== contactId));
+
+      // Show success message
+      setSuccessMessage(`Contact '${contactName}' archived`);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error: unknown) {
+      const apiError = error as { response?: { data?: { error?: string } }; message?: string };
+      setError(apiError.response?.data?.error || apiError.message || 'Failed to archive contact');
+    }
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -117,6 +145,11 @@ export default function Home() {
         ) : userRecord ? (
           <div className={styles.contentContainer}>
             <ErrorDisplay error={error} onDismiss={() => setError(null)} />
+            {successMessage && (
+              <div className={styles.successMessage}>
+                {successMessage}
+              </div>
+            )}
             <LoginExpirationWarning />
             <div className={styles.logoutContainer}>
               {userRoles && Object.entries(userRoles).map(([role, url]) => (
@@ -151,6 +184,7 @@ export default function Home() {
               onSaveContactInfo={onSaveContactInfoFieldStart}
               onSaveContactNotes={onSaveContactNotesStart}
               onSaveContactStatus={onSaveContactStatusStart}
+              onArchiveContact={handleArchiveContact}
               onSaveDisplayError={onSaveDisplayError}
             />
             <pre className={styles.rawData}>{rawData}</pre>

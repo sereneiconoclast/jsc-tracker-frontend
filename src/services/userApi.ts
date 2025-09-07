@@ -33,6 +33,14 @@ export class UserApiService {
       { [field]: value }
     );
   }
+
+  // TODO: Consider whether we ever want to allow passing a userId here
+  async archiveContact(accessToken: string, contactId: string, userId?: string) {
+    userId ||= '-'; // look up the user owning the accessToken
+    return axios.delete(
+      `${this.baseUrl}/user/${userId}/contact/${contactId}?access_token=${accessToken}`
+    );
+  }
 }
 
 // Export a singleton instance
